@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BDBM — демо</title>
+  <style>
+    :root{
+      --bg:#f5f7fb; --card:#ffffff; --muted:#6b7280; --accent:#2563eb; --accent-2:#06b6d4; --glass: rgba(255,255,255,0.7);
+      --max-width:1200px;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial; background:linear-gradient(180deg,#eef2ff 0%,var(--bg) 100%); margin:0; color:#0f172a}
+    .wrap{max-width:var(--max-width);margin:28px auto;padding:20px}
+
+    header{display:flex;gap:16px;align-items:center;margin-bottom:18px}
+    .logo{display:flex;flex-direction:column}
+    .logo h1{
+      margin:0;
+      font-size:40px; /* was 20px */
+      color:var(--accent)
+    }
+    .logo p{margin:0;font-size:12px;color:var(--muted)}
+
+    .layout{display:grid;grid-template-columns:300px 1fr;gap:20px}
+    @media (max-width:900px){.layout{grid-template-columns:1fr}.sidebar{order:2}}
+
+    /* Sidebar / filters */
+    .sidebar{background:var(--card);padding:16px;border-radius:24px;box-shadow:0 6px 18px rgba(15,23,42,0.06)}
+    .filter-group{margin-bottom:14px}
+    .filter-group h3{margin:0 0 16px 0;font-size:13px;color:#111827}
+    input[type=text], select{width:100%;padding:8px 10px;border:1px solid #e6e9ef;border-radius:8px}
+
+    .checkbox-list{display:flex;flex-direction:column;gap:8px}
+    .chip{display:inline-block;padding:6px 10px;border-radius:999px;background:#f1f5f9;border:1px solid #e6eef8;font-size:13px}
+
+    .price-range{display:flex;gap:8px}
+    .price-range input{width:100%}
+
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;background:var(--accent);color:white;border:none;cursor:pointer}
+    .btn.secondary{background:transparent;color:var(--accent);border:1px solid #dbeafe}
+
+    /* Product list */
+    .content{display:flex;flex-direction:column;gap:12px}
+    .controls{display:flex;justify-content:space-between;align-items:center}
+    .controls .result-count{color:var(--muted)}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Было 240px */
+      gap: 16px;
+    }
+
+
+    .card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 8px 20px rgba(12,15,25,0.04);display:flex;flex-direction:column;gap:8px}
+    .card .thumb{
+      height:220px; /* was 140px соотношение фото 16*9 */
+      border-radius:8px;background:linear-gradient(135deg,var(--accent-2),var(--accent));
+      color:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700
+    }
+    .card h4{margin:0;font-size:16px}
+    .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:13px}
+    .specs{display:flex;flex-wrap:wrap;gap:6px}
+    .spec{padding:6px 8px;border-radius:6px;background:#f8fafc;border:1px solid #eef2ff;font-size:12px;color:#0f172a}
+    .price{font-weight:700;color:#0b1220}
+
+    /* Order modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.5);display:flex;align-items:center;justify-content:center;z-index:40}
+    .modal{width:420px;background:var(--card);padding:18px;border-radius:12px}
+    .modal h3{margin:0 0 10px 0}
+    .modal form{display:flex;flex-direction:column;gap:8px}
+
+    footer{margin-top:24px;color:var(--muted);font-size:13px}
+
+    /* small helpers */
+    .row{display:flex;gap:8px;align-items:center}
+    .badge{background:#eef2ff;padding:6px 8px;border-radius:8px;font-size:12px;color:var(--accent)}
+    .pill{padding:6px 8px;border-radius:999px;background:#f3f4f6;font-size:12px}
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">
+        <h1>BDBM.Russia</h1>
+        <p>Общероссийская торговая платформа</p>
+      </div>
+      <div style="margin-left:auto" class="row">
+        <div class="pill">Вход / Регистрация</div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="filter-group">
+          <h3>Поиск</h3>
+          <input id="q" type="text" placeholder="название, характеристика, компания..." />
+        </div>
+
+        <div class="filter-group">
+          <h3>Категория</h3>
+          <div id="categories" class="checkbox-list"></div>
+        </div>
+
+        <div class="filter-group">
+          <h3>Цена (₽)</h3>
+          <div class="price-range">
+            <input id="minPrice" type="number" placeholder="min" />
+            <input id="maxPrice" type="number" placeholder="max" />
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h3>Характеристики</h3>
+          <div id="specs" class="checkbox-list"></div>
+        </div>
+
+        <div class="filter-group">
+          <h3>Местоположение</h3>
+          <select id="locationSelect"><option value="">Любой</option></select>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="apply" class="btn">Применить</button>
+          <button id="reset" class="btn secondary">Сброс</button>
+        </div>
+      </aside>
+
+      <main class="content">
+        <div class="controls">
+          <div class="row">
+            <div class="badge" id="total">0</div>
+            <div class="result-count">товаров найдено</div>
+          </div>
+          <div class="row">
+            <label class="chip">Сорт:</label>
+            <select id="sort">
+              <option value="relevance">По релевантности</option>
+              <option value="price_asc">Цена ↑</option>
+              <option value="price_desc">Цена ↓</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid" id="grid"></div>
+
+        <footer>Демо-шаблон — реализуйте регистрацию, оплату и хранение данных на сервере для продакшна.</footer>
+      </main>
+    </div>
+  </div>
+
+  <!-- modal -->
+  <div id="modal" style="display:none" class="modal-backdrop">
+    <div class="modal">
+      <h3 id="modalTitle">Заказ</h3>
+      <form id="orderForm">
+        <input id="productId" type="hidden" />
+        <label>Ваше имя<input id="buyerName" required type="text"/></label>
+        <label>Email<input id="buyerEmail" required type="text"/></label>
+        <label>Количество<input id="qty" required type="number" value="1" min="1"/></label>
+        <label>Сообщение<textarea id="buyerMsg" rows="3"></textarea></label>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+          <button type="button" id="cancelBtn" class="btn secondary">Отмена</button>
+          <button class="btn">Отправить заказ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // --- Demo data ---
+    const PRODUCTS = [
+      {id:1,title:'Электродвигатель АТ-200', company:'Завод ТехМаш',category:'Электрооборудование',price:15400,location:'Санкт-Петербург',specs:['220V','IP54','3kW'],imgText:'АТ-200'},
+      {id:2,title:'Редуктор Р-50', company:'МехПром',category:'Механика',price:98000,location:'Москва',specs:['Сталь','Масляный'],imgText:'Р-50'},
+      {id:3,title:'Насос центробежный НЦ-1', company:'ВодаПром',category:'Насосы',price:42000,location:'Казань',specs:['3kW','Нержавейка'],imgText:'НЦ-1'},
+      {id:4,title:'Контроллер PLC-300', company:'АвтоКонтрол',category:'Автоматика',price:72000,location:'Москва',specs:['Ethernet','24V'],imgText:'PLC-300'},
+      {id:5,title:'Турбинный диск ТД-7', company:'МеталлСнаб',category:'Металлоизделия',price:230000,location:'Саратов',specs:['Титан','Ø200mm'],imgText:'ТД-7'},
+      {id:6,title:'Паллетный штабелер', company:'ЛогистТех',category:'Складское',price:65000,location:'Санкт-Петербург',specs:['Электро','500kg'],imgText:'Штабелер'},
+    ];
+
+    // --- Rendering / Filters ---
+    const grid = document.getElementById('grid');
+    const total = document.getElementById('total');
+    const q = document.getElementById('q');
+    const categoriesEl = document.getElementById('categories');
+    const specsEl = document.getElementById('specs');
+    const locationSelect = document.getElementById('locationSelect');
+    const minPrice = document.getElementById('minPrice');
+    const maxPrice = document.getElementById('maxPrice');
+    const apply = document.getElementById('apply');
+    const reset = document.getElementById('reset');
+    const sort = document.getElementById('sort');
+
+    // derive sets
+    const categories = Array.from(new Set(PRODUCTS.map(p=>p.category)));
+    const locations = Array.from(new Set(PRODUCTS.map(p=>p.location)));
+    const specs = Array.from(new Set(PRODUCTS.flatMap(p=>p.specs)));
+
+    function makeCheckboxList(items, container, namePrefix){
+      items.forEach(it=>{
+        const id = namePrefix+'-'+it.replace(/\s|\W/g,'_');
+        const wrap = document.createElement('label'); wrap.style.display='flex'; wrap.style.alignItems='center'; wrap.style.gap='8px';
+        const cb = document.createElement('input'); cb.type='checkbox'; cb.value=it; cb.id=id; wrap.appendChild(cb);
+        const span = document.createElement('span'); span.textContent = it; span.style.fontSize='14px'; wrap.appendChild(span);
+        container.appendChild(wrap);
+      })
+    }
+    makeCheckboxList(categories,categoriesEl,'cat');
+    makeCheckboxList(specs,specsEl,'spec');
+    locations.forEach(loc=>{ const o=document.createElement('option'); o.value=loc; o.textContent=loc; locationSelect.appendChild(o)});
+
+    function render(products){
+      grid.innerHTML='';
+      total.textContent = products.length;
+      if(products.length===0){ grid.innerHTML='<div style="padding:20px">Ничего не найдено по заданным фильтрам.</div>'; return }
+      products.forEach(p=>{
+        const card = document.createElement('article'); card.className='card';
+        card.innerHTML = `
+          <div class="thumb">${p.imgText}</div>
+          <h4>${p.title}</h4>
+          <div class="meta"><div>${p.company}</div><div class="price">₽${p.price.toLocaleString()}</div></div>
+          <div class="specs">${p.specs.map(s=>`<div class="spec">${s}</div>`).join('')}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+            <div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px">
+              <div class="pill">${p.category}</div>
+              <div class="pill">${p.location}</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn secondary" data-id="${p.id}" onclick="viewProfile(${p.id})">Профиль</button>
+              <button class="btn" onclick="openOrder(${p.id})">Заказать</button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      })
+    }
+
+    function applyFilters(){
+      const qv = q.value.trim().toLowerCase();
+      const checkedCats = Array.from(categoriesEl.querySelectorAll('input[type=checkbox]:checked')).map(n=>n.value);
+      const checkedSpecs = Array.from(specsEl.querySelectorAll('input[type=checkbox]:checked')).map(n=>n.value);
+      const loc = locationSelect.value;
+      const min = Number(minPrice.value) || 0;
+      const max = Number(maxPrice.value) || Infinity;
+
+      let out = PRODUCTS.filter(p=>{
+        if(checkedCats.length && !checkedCats.includes(p.category)) return false;
+        if(loc && p.location !== loc) return false;
+        if(p.price < min || p.price > max) return false;
+        if(checkedSpecs.length && !checkedSpecs.every(s=>p.specs.includes(s))) return false;
+        if(qv){
+          const hay = (p.title+' '+p.company+' '+p.category+' '+p.specs.join(' ')+' '+p.location).toLowerCase();
+          if(!hay.includes(qv)) return false;
+        }
+        return true;
+      });
+
+      // sort
+      const s = sort.value;
+      if(s==='price_asc') out.sort((a,b)=>a.price-b.price);
+      if(s==='price_desc') out.sort((a,b)=>b.price-a.price);
+
+      render(out);
+    }
+
+    apply.addEventListener('click',applyFilters);
+    reset.addEventListener('click',()=>{document.querySelectorAll('.sidebar input').forEach(i=>{ if(i.type==='checkbox') i.checked=false; else i.value=''}); locationSelect.value=''; sort.value='relevance'; applyFilters();});
+    sort.addEventListener('change',applyFilters);
+    q.addEventListener('keydown', (e)=>{ if(e.key==='Enter') applyFilters(); });
+
+    // small profile viewer (opens a simple alert in demo)
+    window.viewProfile = function(id){
+      const p = PRODUCTS.find(x=>x.id===id);
+      if(!p) return; alert(`Профиль: ${p.company}\nТовар: ${p.title}\nКатегория: ${p.category}\nМестоположение: ${p.location}\nЦена: ₽${p.price}`)
+    }
+
+    // --- ordering ---
+    const modal = document.getElementById('modal');
+    const orderForm = document.getElementById('orderForm');
+    const modalTitle = document.getElementById('modalTitle');
+    const productIdInput = document.getElementById('productId');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    window.openOrder = function(id){
+      const p = PRODUCTS.find(x=>x.id===id);
+      if(!p) return;
+      modalTitle.textContent = `Заказ: ${p.title} — ${p.company}`;
+      productIdInput.value = p.id;
+      modal.style.display = 'flex';
+    }
+    cancelBtn.addEventListener('click',()=>modal.style.display='none');
+
+    orderForm.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const data = {
+        productId: productIdInput.value,
+        name: document.getElementById('buyerName').value,
+        email: document.getElementById('buyerEmail').value,
+        qty: document.getElementById('qty').value,
+        msg: document.getElementById('buyerMsg').value,
+      };
+      // demo: just show a confirmation
+      modal.style.display='none';
+      alert('Заказ отправлен (демо).\n' + JSON.stringify(data,null,2));
+    })
+
+    // initial render
+    render(PRODUCTS);
+  </script>
+</body>
+</html>
