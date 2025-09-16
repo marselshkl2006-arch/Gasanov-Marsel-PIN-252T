@@ -1,87 +1,438 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="ru">
+
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
   <title>BDBM — демо</title>
   <style>
-    :root{
-      --bg:#f5f7fb; --card:#ffffff; --muted:#6b7280; --accent:#2563eb; --accent-2:#06b6d4; --glass: rgba(255,255,255,0.7);
-      --max-width:1200px;
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent-2: #06b6d4;
+      --glass: rgba(255, 255, 255, 0.7);
+      --max-width: 1200px;
     }
-    *{box-sizing:border-box}
-    body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial; background:linear-gradient(180deg,#eef2ff 0%,var(--bg) 100%); margin:0; color:#0f172a}
-    .wrap{max-width:var(--max-width);margin:28px auto;padding:20px}
 
-    header{display:flex;gap:16px;align-items:center;margin-bottom:18px}
-    .logo{display:flex;flex-direction:column}
-    .logo h1{
-      margin:0;
-      font-size:40px; /* was 20px */
-      color:var(--accent)
+    * {
+      box-sizing: border-box
     }
-    .logo p{margin:0;font-size:12px;color:var(--muted)}
 
-    .layout{display:grid;grid-template-columns:300px 1fr;gap:20px}
-    @media (max-width:900px){.layout{grid-template-columns:1fr}.sidebar{order:2}}
+    body {
+      font-family: Inter, system-ui, Segoe UI, Roboto, Helvetica, Arial;
+      background: linear-gradient(180deg, #eef2ff 0%, var(--bg) 100%);
+      margin: 0;
+      color: #0f172a
+    }
+
+    .wrap {
+      max-width: var(--max-width);
+      margin: 28px auto;
+      padding: 20px
+    }
+
+    header {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 18px
+    }
+
+    .logo {
+      display: flex;
+      flex-direction: column
+    }
+
+    .logo h1 {
+      margin: 0;
+      font-size: 40px;
+      /* was 20px */
+      color: var(--accent)
+    }
+
+    .logo p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 20px
+    }
+
+    @media (max-width:900px) {
+      .layout {
+        grid-template-columns: 1fr
+      }
+
+      .sidebar {
+        order: 2
+      }
+    }
 
     /* Sidebar / filters */
-    .sidebar{background:var(--card);padding:16px;border-radius:24px;box-shadow:0 6px 18px rgba(15,23,42,0.06)}
-    .filter-group{margin-bottom:14px}
-    .filter-group h3{margin:0 0 16px 0;font-size:13px;color:#111827}
-    input[type=text], select{width:100%;padding:8px 10px;border:1px solid #e6e9ef;border-radius:8px}
+    .sidebar {
+      background: var(--card);
+      padding: 16px;
+      border-radius: 24px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06)
+    }
 
-    .checkbox-list{display:flex;flex-direction:column;gap:8px}
-    .chip{display:inline-block;padding:6px 10px;border-radius:999px;background:#f1f5f9;border:1px solid #e6eef8;font-size:13px}
+    .filter-group {
+      margin-bottom: 14px
+    }
 
-    .price-range{display:flex;gap:8px}
-    .price-range input{width:100%}
+    .filter-group h3 {
+      margin: 0 0 16px 0;
+      font-size: 13px;
+      color: #111827
+    }
 
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;background:var(--accent);color:white;border:none;cursor:pointer}
-    .btn.secondary{background:transparent;color:var(--accent);border:1px solid #dbeafe}
+    input[type=text],
+    select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #e6e9ef;
+      border-radius: 8px
+    }
+
+    .checkbox-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .chip {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      border: 1px solid #e6eef8;
+      font-size: 13px
+    }
+
+    .price-range {
+      display: flex;
+      gap: 8px
+    }
+
+    .price-range input {
+      width: 100%
+    }
+
+    /* ▼▼▼ Новое ▼▼▼ */
+    .price-range input[type="number"] {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      appearance: textfield;
+      /* убрать стрелки в Chrome */
+      transition: border-color 0.2s ease;
+    }
+
+    .price-range input[type="number"]:focus {
+      border-color: #3b82f6;
+      /* синий при фокусе */
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      /* легкая подсветка */
+    }
+
+    /* Убрать стрелки в Firefox */
+    .price-range input[type="number"]::-webkit-outer-spin-button,
+    .price-range input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .price-range input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #fff;
+      appearance: none;
+      /* Убираем дефолтные стрелки в Chrome */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2210%22%20height%3D%227%22%20viewBox%3D%220%200%2010%207%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M0%200l5%207%205-7z%22%20fill%3D%22%23666%22/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 10px;
+      cursor: pointer;
+      transition: border 0.2s ease;
+    }
+
+    select:focus {
+      border-color: #3b82f6;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+
+    /* ▲▲▲ Новое ▲▲▲ */
+
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      cursor: pointer
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid #dbeafe
+    }
 
     /* Product list */
-    .content{display:flex;flex-direction:column;gap:12px}
-    .controls{display:flex;justify-content:space-between;align-items:center}
-    .controls .result-count{color:var(--muted)}
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .controls .result-count {
+      color: var(--muted)
+    }
+
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Было 240px */
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      /* Было 240px */
       gap: 16px;
     }
 
 
-    .card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 8px 20px rgba(12,15,25,0.04);display:flex;flex-direction:column;gap:8px}
-    .card .thumb{
-      height:220px; /* was 140px соотношение фото 16*9 */
-      border-radius:8px;background:linear-gradient(135deg,var(--accent-2),var(--accent));
-      color:white;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:700
+    .card {
+      background: var(--card);
+      padding: 12px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(12, 15, 25, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 8px
     }
-    .card h4{margin:0;font-size:16px}
-    .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:13px}
-    .specs{display:flex;flex-wrap:wrap;gap:6px}
-    .spec{padding:6px 8px;border-radius:6px;background:#f8fafc;border:1px solid #eef2ff;font-size:12px;color:#0f172a}
-    .price{font-weight:700;color:#0b1220}
+
+    .card .thumb {
+      height: 220px;
+      /* was 140px соотношение фото 16*9 */
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700
+    }
+
+    .card h4 {
+      margin: 0;
+      font-size: 16px
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    .specs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px
+    }
+
+    .spec {
+      padding: 6px 8px;
+      border-radius: 6px;
+      background: #f8fafc;
+      border: 1px solid #eef2ff;
+      font-size: 12px;
+      color: #0f172a
+    }
+
+    .price {
+      font-weight: 700;
+      color: #0b1220
+    }
 
     /* Order modal */
-    .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.5);display:flex;align-items:center;justify-content:center;z-index:40}
-    .modal{width:420px;background:var(--card);padding:18px;border-radius:12px}
-    .modal h3{margin:0 0 10px 0}
-    .modal form{display:flex;flex-direction:column;gap:8px}
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 40
+    }
 
-    footer{margin-top:24px;color:var(--muted);font-size:13px}
+    .modal {
+      width: 420px;
+      background: var(--card);
+      padding: 18px;
+      border-radius: 12px
+    }
+
+    .modal h3 {
+      margin: 0 0 10px 0
+    }
+
+    .modal form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    footer {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 13px
+    }
 
     /* small helpers */
-    .row{display:flex;gap:8px;align-items:center}
-    .badge{background:#eef2ff;padding:6px 8px;border-radius:8px;font-size:12px;color:var(--accent)}
-    .pill{padding:6px 8px;border-radius:999px;background:#f3f4f6;font-size:12px}
+    .row {
+      display: flex;
+      gap: 8px;
+      align-items: center
+    }
 
+    .badge {
+      background: #eef2ff;
+      padding: 6px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--accent)
+    }
+
+    .pill {
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      font-size: 12px
+    }
+
+    /* ▼▼▼ Новое ▼▼▼ */
+    .filter-header {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #111827;
+      margin: 0 0 8px 0;
+    }
+
+    .filter-header::after {
+      content: "▼";
+      font-size: 10px;
+      transition: transform 0.2s ease;
+    }
+
+    .filter-group.collapsed .filter-header::after {
+      transform: rotate(-90deg);
+    }
+
+    .filter-group .filter-content {
+      display: block;
+    }
+
+    .filter-group.collapsed .filter-content {
+      display: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      outline: none;
+    }
+
+    .modal input[type="text"],
+    .modal input[type="number"],
+    .modal textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .modal input[type="text"]:focus,
+    .modal input[type="number"]:focus,
+    .modal textarea:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      outline: none;
+    }
+
+    .modal textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+
+
+
+    /* Дополнительные стили для контактной карточки */
+    #contactContent .row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    #contactContent a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    #contactContent a:hover {
+      text-decoration: underline;
+    }
+
+    #contactModal .modal {
+      padding: 20px;
+      border-radius: 12px;
+      background: white;
+    }
+
+    #contactModal .modal h3 {
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    #contactModal .modal .row strong {
+      font-weight: 600;
+    }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <header>
@@ -89,47 +440,61 @@
         <h1>BDBM.Russia</h1>
         <p>Общероссийская торговая платформа</p>
       </div>
-      <div style="margin-left:auto" class="row">
+      <div class="row" style="margin-left:auto">
         <div class="pill">Вход / Регистрация</div>
       </div>
     </header>
-
     <div class="layout">
       <aside class="sidebar">
         <div class="filter-group">
-          <h3>Поиск</h3>
-          <input id="q" type="text" placeholder="название, характеристика, компания..." />
-        </div>
-
-        <div class="filter-group">
-          <h3>Категория</h3>
-          <div id="categories" class="checkbox-list"></div>
-        </div>
-
-        <div class="filter-group">
-          <h3>Цена (₽)</h3>
-          <div class="price-range">
-            <input id="minPrice" type="number" placeholder="min" />
-            <input id="maxPrice" type="number" placeholder="max" />
+          <div class="filter-header">Поиск</div>
+          <div class="filter-content">
+            <input id="q" placeholder="название, характеристика, компания..." type="text" />
           </div>
         </div>
-
-        <div class="filter-group">
-          <h3>Характеристики</h3>
-          <div id="specs" class="checkbox-list"></div>
+        <div class="filter-group collapsed">
+          <div class="filter-header">Категория</div>
+          <div class="filter-content">
+            <div class="checkbox-list" id="categories"></div>
+          </div>
         </div>
-
         <div class="filter-group">
-          <h3>Местоположение</h3>
-          <select id="locationSelect"><option value="">Любой</option></select>
+          <div class="filter-header">Цена (₽)</div>
+          <div class="filter-content">
+            <div class="price-range">
+              <input id="minPrice" placeholder="min" type="number" />
+              <input id="maxPrice" placeholder="max" type="number" />
+            </div>
+          </div>
         </div>
-
+        <div class="filter-group">
+          <div class="filter-header">Наличие</div>
+          <div class="filter-content">
+            <div class="checkbox-list" id="availabilityFilter">
+              <label><input type="checkbox" value="В наличии" /> В наличии</label>
+              <label><input type="checkbox" value="Под заказ" /> Под заказ</label>
+            </div>
+          </div>
+        </div>
+        <div class="filter-group collapsed">
+          <div class="filter-header">Характеристики</div>
+          <div class="filter-content">
+            <div class="checkbox-list" id="specs"></div>
+          </div>
+        </div>
+        <div class="filter-group" id="locationGroup">
+          <div class="filter-header">Местоположение</div>
+          <div class="filter-content">
+            <input id="locationSearch" placeholder="Поиск города..." type="text" />
+            <div class="checkbox-list" id="locationList" style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+            </div>
+          </div>
+        </div>
         <div style="display:flex;gap:8px;margin-top:8px">
-          <button id="apply" class="btn">Применить</button>
-          <button id="reset" class="btn secondary">Сброс</button>
+          <button class="btn" id="apply">Применить</button>
+          <button class="btn secondary" id="reset">Сброс</button>
         </div>
       </aside>
-
       <main class="content">
         <div class="controls">
           <div class="row">
@@ -145,41 +510,50 @@
             </select>
           </div>
         </div>
-
         <div class="grid" id="grid"></div>
-
         <footer>Демо-шаблон — реализуйте регистрацию, оплату и хранение данных на сервере для продакшна.</footer>
       </main>
     </div>
   </div>
-
   <!-- modal -->
-  <div id="modal" style="display:none" class="modal-backdrop">
+  <div class="modal-backdrop" id="modal" style="display:none">
     <div class="modal">
       <h3 id="modalTitle">Заказ</h3>
       <form id="orderForm">
         <input id="productId" type="hidden" />
-        <label>Ваше имя<input id="buyerName" required type="text"/></label>
-        <label>Email<input id="buyerEmail" required type="text"/></label>
-        <label>Количество<input id="qty" required type="number" value="1" min="1"/></label>
+        <label>Ваше имя<input id="buyerName" required="" type="text" /></label>
+        <label>Email<input id="buyerEmail" required="" type="text" /></label>
+        <label>Количество<input id="qty" min="1" required="" type="number" value="1" /></label>
         <label>Сообщение<textarea id="buyerMsg" rows="3"></textarea></label>
         <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
-          <button type="button" id="cancelBtn" class="btn secondary">Отмена</button>
+          <button class="btn secondary" id="cancelBtn" type="button">Отмена</button>
           <button class="btn">Отправить заказ</button>
         </div>
       </form>
     </div>
   </div>
-
+  <!-- Контакты продавца -->
+  <div class="modal-backdrop" id="contactModal" style="display:none">
+    <div class="modal" style="max-width:500px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <h3 style="margin:0">Контакты продавца</h3>
+        <button onclick="closeContactModal()"
+          style="background:none;border:none;font-size:20px;cursor:pointer">×</button>
+      </div>
+      <div id="contactContent" style="display:flex;flex-direction:column;gap:8px">
+        <!-- Контент будет подставлен динамически -->
+      </div>
+    </div>
+  </div>
   <script>
     // --- Demo data ---
     const PRODUCTS = [
-      {id:1,title:'Электродвигатель АТ-200', company:'Завод ТехМаш',category:'Электрооборудование',price:15400,location:'Санкт-Петербург',specs:['220V','IP54','3kW'],imgText:'АТ-200'},
-      {id:2,title:'Редуктор Р-50', company:'МехПром',category:'Механика',price:98000,location:'Москва',specs:['Сталь','Масляный'],imgText:'Р-50'},
-      {id:3,title:'Насос центробежный НЦ-1', company:'ВодаПром',category:'Насосы',price:42000,location:'Казань',specs:['3kW','Нержавейка'],imgText:'НЦ-1'},
-      {id:4,title:'Контроллер PLC-300', company:'АвтоКонтрол',category:'Автоматика',price:72000,location:'Москва',specs:['Ethernet','24V'],imgText:'PLC-300'},
-      {id:5,title:'Турбинный диск ТД-7', company:'МеталлСнаб',category:'Металлоизделия',price:230000,location:'Саратов',specs:['Титан','Ø200mm'],imgText:'ТД-7'},
-      {id:6,title:'Паллетный штабелер', company:'ЛогистТех',category:'Складское',price:65000,location:'Санкт-Петербург',specs:['Электро','500kg'],imgText:'Штабелер'},
+      { id: 1, title: 'Электродвигатель АТ-200', company: 'Завод ТехМаш', category: 'Электрооборудование', price: 15400, location: 'Санкт-Петербург', specs: ['220V', 'IP54', '3kW'], imgText: 'АТ-200', availability: 'В наличии' },
+      { id: 2, title: 'Редуктор Р-50', company: 'МехПром', category: 'Механика', price: 98000, location: 'Москва', specs: ['Сталь', 'Масляный'], imgText: 'Р-50', availability: 'В наличии' },
+      { id: 3, title: 'Насос центробежный НЦ-1', company: 'ВодаПром', category: 'Насосы', price: 42000, location: 'Казань', specs: ['3kW', 'Нержавейка'], imgText: 'НЦ-1', availability: 'В наличии' },
+      { id: 4, title: 'Контроллер PLC-300', company: 'АвтоКонтрол', category: 'Автоматика', price: 72000, location: 'Москва', specs: ['Ethernet', '24V'], imgText: 'PLC-300', availability: 'Под заказ' },
+      { id: 5, title: 'Турбинный диск ТД-7', company: 'МеталлСнаб', category: 'Металлоизделия', price: 230000, location: 'Саратов', specs: ['Титан', 'Ø200mm'], imgText: 'ТД-7', availability: 'Под заказ' },
+      { id: 6, title: 'Паллетный штабелер', company: 'ЛогистТех', category: 'Складское', price: 65000, location: 'Санкт-Петербург', specs: ['Электро', '500kg'], imgText: 'Штабелер', availability: 'В наличии' },
     ];
 
     // --- Rendering / Filters ---
@@ -196,41 +570,68 @@
     const sort = document.getElementById('sort');
 
     // derive sets
-    const categories = Array.from(new Set(PRODUCTS.map(p=>p.category)));
-    const locations = Array.from(new Set(PRODUCTS.map(p=>p.location)));
-    const specs = Array.from(new Set(PRODUCTS.flatMap(p=>p.specs)));
+    const categories = Array.from(new Set(PRODUCTS.map(p => p.category)));
 
-    function makeCheckboxList(items, container, namePrefix){
-      items.forEach(it=>{
-        const id = namePrefix+'-'+it.replace(/\s|\W/g,'_');
-        const wrap = document.createElement('label'); wrap.style.display='flex'; wrap.style.alignItems='center'; wrap.style.gap='8px';
-        const cb = document.createElement('input'); cb.type='checkbox'; cb.value=it; cb.id=id; wrap.appendChild(cb);
-        const span = document.createElement('span'); span.textContent = it; span.style.fontSize='14px'; wrap.appendChild(span);
+    // Для демонстрации прокрутки!!! Стереть(закоментировать) и заменить на закоменченную константу locations ниже!!!
+    const locations = [
+      "Москва", "Санкт-Петербург", "Новосибирск", "Екатеринбург", "Казань",
+      "Нижний Новгород", "Челябинск", "Самара", "Омск", "Ростов-на-Дону",
+      "Уфа", "Красноярск", "Пермь", "Воронеж", "Волгоград",
+      "Краснодар", "Тюмень", "Саратов", "Тольятти", "Ижевск",
+      "Барнаул", "Ульяновск", "Иркутск", "Хабаровск", "Ярославль",
+      "Владивосток", "Махачкала", "Томск", "Оренбург", "Кемерово"
+    ];
+
+    // const locations = Array.from(new Set(PRODUCTS.map(p=>p.location)));
+
+    const specs = Array.from(new Set(PRODUCTS.flatMap(p => p.specs)));
+
+    function makeCheckboxList(items, container, namePrefix) {
+      items.forEach(it => {
+        const id = namePrefix + '-' + it.replace(/\s|\W/g, '_');
+        const wrap = document.createElement('label'); wrap.style.display = 'flex'; wrap.style.alignItems = 'center'; wrap.style.gap = '8px';
+        const cb = document.createElement('input'); cb.type = 'checkbox'; cb.value = it; cb.id = id; wrap.appendChild(cb);
+        const span = document.createElement('span'); span.textContent = it; span.style.fontSize = '14px'; wrap.appendChild(span);
         container.appendChild(wrap);
       })
     }
-    makeCheckboxList(categories,categoriesEl,'cat');
-    makeCheckboxList(specs,specsEl,'spec');
-    locations.forEach(loc=>{ const o=document.createElement('option'); o.value=loc; o.textContent=loc; locationSelect.appendChild(o)});
+    makeCheckboxList(categories, categoriesEl, 'cat');
+    makeCheckboxList(specs, specsEl, 'spec');
+    const locationList = document.getElementById('locationList');
 
-    function render(products){
-      grid.innerHTML='';
+    function renderLocationCheckboxes(filter = '') {
+      locationList.innerHTML = '';
+      const filteredLocations = locations.filter(loc => loc.toLowerCase().includes(filter.toLowerCase()));
+      makeCheckboxList(filteredLocations, locationList, 'loc');
+    }
+
+    document.getElementById('locationSearch').addEventListener('input', e => {
+      renderLocationCheckboxes(e.target.value);
+    });
+
+    renderLocationCheckboxes(); // initial
+
+    function render(products) {
+      grid.innerHTML = '';
       total.textContent = products.length;
-      if(products.length===0){ grid.innerHTML='<div style="padding:20px">Ничего не найдено по заданным фильтрам.</div>'; return }
-      products.forEach(p=>{
-        const card = document.createElement('article'); card.className='card';
+      if (products.length === 0) { grid.innerHTML = '<div style="padding:20px">Ничего не найдено по заданным фильтрам.</div>'; return }
+      products.forEach(p => {
+        const card = document.createElement('article'); card.className = 'card';
         card.innerHTML = `
           <div class="thumb">${p.imgText}</div>
           <h4>${p.title}</h4>
           <div class="meta"><div>${p.company}</div><div class="price">₽${p.price.toLocaleString()}</div></div>
-          <div class="specs">${p.specs.map(s=>`<div class="spec">${s}</div>`).join('')}</div>
+          <div class="row" style="color:${p.availability === 'В наличии' ? 'green' : '#b45309'}; font-weight: 500; font-size: 14px;">
+            ${p.availability === 'В наличии' ? "✔ В наличии" : "⏳ Под заказ"}
+          </div>
+          <div class="specs">${p.specs.map(s => `<div class="spec">${s}</div>`).join('')}</div>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
             <div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px">
               <div class="pill">${p.category}</div>
               <div class="pill">${p.location}</div>
             </div>
             <div style="display:flex;gap:8px">
-              <button class="btn secondary" data-id="${p.id}" onclick="viewProfile(${p.id})">Профиль</button>
+              <button class="btn secondary" data-id="${p.id}" onclick="viewProfile(${p.id})">Побробнее</button>
               <button class="btn" onclick="openOrder(${p.id})">Заказать</button>
             </div>
           </div>
@@ -239,44 +640,60 @@
       })
     }
 
-    function applyFilters(){
+    function applyFilters() {
       const qv = q.value.trim().toLowerCase();
-      const checkedCats = Array.from(categoriesEl.querySelectorAll('input[type=checkbox]:checked')).map(n=>n.value);
-      const checkedSpecs = Array.from(specsEl.querySelectorAll('input[type=checkbox]:checked')).map(n=>n.value);
-      const loc = locationSelect.value;
+      const checkedCats = Array.from(categoriesEl.querySelectorAll('input[type=checkbox]:checked')).map(n => n.value);
+      const checkedSpecs = Array.from(specsEl.querySelectorAll('input[type=checkbox]:checked')).map(n => n.value);
+      const checkedLocs = Array.from(locationList.querySelectorAll('input[type=checkbox]:checked')).map(n => n.value);
       const min = Number(minPrice.value) || 0;
+      const checkedAvailability = Array.from(document.querySelectorAll('#availabilityFilter input:checked')).map(cb => cb.value);
       const max = Number(maxPrice.value) || Infinity;
 
-      let out = PRODUCTS.filter(p=>{
-        if(checkedCats.length && !checkedCats.includes(p.category)) return false;
-        if(loc && p.location !== loc) return false;
-        if(p.price < min || p.price > max) return false;
-        if(checkedSpecs.length && !checkedSpecs.every(s=>p.specs.includes(s))) return false;
-        if(qv){
-          const hay = (p.title+' '+p.company+' '+p.category+' '+p.specs.join(' ')+' '+p.location).toLowerCase();
-          if(!hay.includes(qv)) return false;
+      let out = PRODUCTS.filter(p => {
+        if (checkedCats.length && !checkedCats.includes(p.category)) return false;
+        if (checkedLocs.length && !checkedLocs.includes(p.location)) return false;
+        if (p.price < min || p.price > max) return false;
+        if (checkedAvailability.length && !checkedAvailability.includes(p.availability)) return false;
+        if (checkedSpecs.length && !checkedSpecs.every(s => p.specs.includes(s))) return false;
+        if (qv) {
+          const hay = (p.title + ' ' + p.company + ' ' + p.category + ' ' + p.specs.join(' ') + ' ' + p.location).toLowerCase();
+          if (!hay.includes(qv)) return false;
         }
         return true;
       });
 
       // sort
       const s = sort.value;
-      if(s==='price_asc') out.sort((a,b)=>a.price-b.price);
-      if(s==='price_desc') out.sort((a,b)=>b.price-a.price);
+      if (s === 'price_asc') out.sort((a, b) => a.price - b.price);
+      if (s === 'price_desc') out.sort((a, b) => b.price - a.price);
 
       render(out);
     }
 
-    apply.addEventListener('click',applyFilters);
-    reset.addEventListener('click',()=>{document.querySelectorAll('.sidebar input').forEach(i=>{ if(i.type==='checkbox') i.checked=false; else i.value=''}); locationSelect.value=''; sort.value='relevance'; applyFilters();});
-    sort.addEventListener('change',applyFilters);
-    q.addEventListener('keydown', (e)=>{ if(e.key==='Enter') applyFilters(); });
+    apply.addEventListener('click', applyFilters);
+    reset.addEventListener('click', () => { document.querySelectorAll('.sidebar input').forEach(i => { if (i.type === 'checkbox') i.checked = false; else i.value = '' }); locationSelect.value = ''; sort.value = 'relevance'; applyFilters(); });
+    sort.addEventListener('change', applyFilters);
+    q.addEventListener('keydown', (e) => { if (e.key === 'Enter') applyFilters(); });
 
     // small profile viewer (opens a simple alert in demo)
-    window.viewProfile = function(id){
-      const p = PRODUCTS.find(x=>x.id===id);
-      if(!p) return; alert(`Профиль: ${p.company}\nТовар: ${p.title}\nКатегория: ${p.category}\nМестоположение: ${p.location}\nЦена: ₽${p.price}`)
+    window.viewProfile = function (id) {
+      const p = PRODUCTS.find(x => x.id === id);
+      if (!p) return;
+
+      const contactContent = document.getElementById('contactContent');
+      contactContent.innerHTML = `
+        <div class="row"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#2563eb" viewBox="0 0 24 24"><path d="M322V2h6v2h6v2h6v16H3zm2-2h2v-2H5v2zm4 0h2v-4H9v4zm4 0h2v-6h-2v6zm4 0h2v-8h-2v8z"/>
+          </svg><strong style="min-width:80px">Город:</strong> ${p.location}</div>
+        <div class="row"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#10b981" viewBox="0 0 24 24"><path d="M21 16V8a1 1 0 0 0-.55-.9l-8-4a1 1 0 0 0-.9 0l-8 4A1 1 0 0 0 3 8v8a1 1 0 0 0 .55.9l8 4a1 1 0 0 0 .9 0l8-4a1 1 0 0 0 .55-.9zM12 4.3 18.74 8 12 11.7 5.26 8 12 4.3zM5 9.86l6 3.33v6.01L5 15.87V9.86zm14 6.01-6 3.33v-6.01l6-3.33v6.01z"/></svg><strong style="min-width:80px">Наличие:</strong> ${p.availability}</div>
+        <div class="row"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#10b981" viewBox="0 0 24 24"><path d="M17.472 14.382a1 1 0 0 0-1.114.217l-2.11 2.112a15.043 15.043 0 0 1-6.96-6.96l2.112-2.11a1 1 0 0 0 .217-1.114L8.282 3.383a1 1 0 0 0-1.058-.631l-3.986.665a1 1 0 0 0-.838.99C2.4 15.626 8.374 21.6 19.593 21.6a1 1 0 0 0 .99-.838l.665-3.986a1 1 0 0 0-.63-1.058l-3.146-1.02z"/></svg><strong style="min-width:80px">Телефон:</strong> <a href="tel:+79000000000">+7 900 000-00-00</a></div>
+        <div class="row"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#6366f1" viewBox="0 0 24 24"><path d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v1l-10 6L2 7V6zm0 3.236V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9.236l-9.445 5.667a1 1 0 0 1-1.11 0L2 9.236z"/></svg><strong style="min-width:80px">Email:</strong> <a href="mailto:demo@example.com">demo@example.com</a></div>
+        <div class="row"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#0ea5e9" viewBox="0 0 24 24"><path d="M10.59 13.41a1 1 0 0 1 0-1.41L15.17 7H13a1 1 0 1 1 0-2h5a.999.999 0 0 1 1 1v5a1 1 0 1 1-2 0V8.83l-4.59 4.58a1 1 0 0 1-1.41 0z"/><path d="M5 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3a1 1 0 1 0-2 0v3H5V7h3a1 1 0 1 0 0-2H5z"/></svg><strong style="min-width:80px">Сайт:</strong> <a href="https://example.com" target="_blank">example.com</a></div>
+      `;
+
+      document.getElementById('contactModal').style.display = 'flex';
     }
+
+
 
     // --- ordering ---
     const modal = document.getElementById('modal');
@@ -285,16 +702,16 @@
     const productIdInput = document.getElementById('productId');
     const cancelBtn = document.getElementById('cancelBtn');
 
-    window.openOrder = function(id){
-      const p = PRODUCTS.find(x=>x.id===id);
-      if(!p) return;
+    window.openOrder = function (id) {
+      const p = PRODUCTS.find(x => x.id === id);
+      if (!p) return;
       modalTitle.textContent = `Заказ: ${p.title} — ${p.company}`;
       productIdInput.value = p.id;
       modal.style.display = 'flex';
     }
-    cancelBtn.addEventListener('click',()=>modal.style.display='none');
+    cancelBtn.addEventListener('click', () => modal.style.display = 'none');
 
-    orderForm.addEventListener('submit', (e)=>{
+    orderForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const data = {
         productId: productIdInput.value,
@@ -304,12 +721,29 @@
         msg: document.getElementById('buyerMsg').value,
       };
       // demo: just show a confirmation
-      modal.style.display='none';
-      alert('Заказ отправлен (демо).\n' + JSON.stringify(data,null,2));
+      modal.style.display = 'none';
+      alert('Заказ отправлен (демо).\n' + JSON.stringify(data, null, 2));
     })
 
     // initial render
+    // ▼▼▼ Новое ▼▼▼
+    // Обработка клика по заголовку фильтра для сворачивания/разворачивания
+    document.querySelectorAll('.filter-group').forEach(group => {
+      const header = group.querySelector('.filter-header');
+      if (!header) return;
+      header.addEventListener('click', () => {
+        group.classList.toggle('collapsed');
+      });
+    });
+    // ▲▲▲ Новое ▲▲▲
+
     render(PRODUCTS);
+
+    function closeContactModal() {
+      document.getElementById('contactModal').style.display = 'none';
+    }
+
   </script>
 </body>
+
 </html>
