@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <title>BDBM — демо</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent-2: #06b6d4;
+      --glass: rgba(255, 255, 255, 0.7);
+      --max-width: 1200px;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      font-family: Inter, system-ui, Segoe UI, Roboto, Helvetica, Arial;
+      background: linear-gradient(180deg, #eef2ff 0%, var(--bg) 100%);
+      margin: 0;
+      color: #0f172a
+    }
+
+    .wrap {
+      max-width: var(--max-width);
+      margin: 28px auto;
+      padding: 20px
+    }
+
+    header {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 18px
+    }
+
+    .logo {
+      display: flex;
+      flex-direction: column
+    }
+
+    .logo h1 {
+      margin: 0;
+      font-size: 40px;
+      /* was 20px */
+      color: var(--accent)
+    }
+
+    .logo-l h1 {
+      margin: 0;
+      font-size: 20px;
+      /* was 20px */
+      color: var(--accent)
+    }
+
+    .logo p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 20px
+    }
+
+    @media (max-width:900px) {
+      .layout {
+        grid-template-columns: 1fr
+      }
+
+      .sidebar {
+        order: 2
+      }
+    }
+
+    /* Sidebar / filters */
+    .sidebar {
+      background: var(--card);
+      padding: 16px;
+      border-radius: 24px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06)
+    }
+
+    .filter-group {
+      margin-bottom: 14px
+    }
+
+    .filter-group h3 {
+      margin: 0 0 16px 0;
+      font-size: 13px;
+      color: #111827
+    }
+
+    input[type=text],
+    select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #e6e9ef;
+      border-radius: 8px
+    }
+
+    .checkbox-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .chip {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      border: 1px solid #e6eef8;
+      font-size: 13px
+    }
+
+    .price-range {
+      display: flex;
+      gap: 8px
+    }
+
+    .price-range input {
+      width: 100%
+    }
+
+    /* ▼▼▼ Новое ▼▼▼ */
+    .price-range input[type="number"] {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      appearance: textfield;
+      /* убрать стрелки в Chrome */
+      transition: border-color 0.2s ease;
+    }
+
+    .price-range input[type="number"]:focus {
+      border-color: #3b82f6;
+      /* синий при фокусе */
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      /* легкая подсветка */
+    }
+
+    /* Убрать стрелки в Firefox */
+    .price-range input[type="number"]::-webkit-outer-spin-button,
+    .price-range input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .price-range input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #fff;
+      appearance: none;
+      /* Убираем дефолтные стрелки в Chrome */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2210%22%20height%3D%227%22%20viewBox%3D%220%200%2010%207%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M0%200l5%207%205-7z%22%20fill%3D%22%23666%22/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 10px;
+      cursor: pointer;
+      transition: border 0.2s ease;
+    }
+
+    select:focus {
+      border-color: #3b82f6;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+
+    /* ▲▲▲ Новое ▲▲▲ */
+
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      cursor: pointer
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid #dbeafe
+    }
+
+    /* Product list */
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .controls .result-count {
+      color: var(--muted)
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      /* Было 240px */
+      gap: 16px;
+    }
+
+
+    .card {
+      background: var(--card);
+      padding: 12px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(12, 15, 25, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .card .thumb {
+      height: 220px;
+      /* was 140px соотношение фото 16*9 */
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700
+    }
+
+    .card h4 {
+      margin: 0;
+      font-size: 16px
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    .specs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px
+    }
+
+    .spec {
+      padding: 6px 8px;
+      border-radius: 6px;
+      background: #f8fafc;
+      border: 1px solid #eef2ff;
+      font-size: 12px;
+      color: #0f172a
+    }
+
+    .price {
+      font-weight: 700;
+      color: #0b1220
+    }
+
+    /* Order modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 40
+    }
+
+    .modal {
+      width: 420px;
+      background: var(--card);
+      padding: 18px;
+      border-radius: 12px
+    }
+
+    .modal h3 {
+      margin: 0 0 10px 0
+    }
+
+    .modal form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    footer {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    /* small helpers */
+    .row {
+      display: flex;
+      gap: 8px;
+      align-items: center
+    }
+
+    .badge {
+      background: #eef2ff;
+      padding: 6px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--accent)
+    }
+
+    .pill {
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      font-size: 12px
+    }
+
+    /* ▼▼▼ Новое ▼▼▼ */
+    .filter-header {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #111827;
+      margin: 0 0 8px 0;
+    }
+
+    .filter-header::after {
+      content: "▼";
+      font-size: 10px;
+      transition: transform 0.2s ease;
+    }
+
+    .filter-group.collapsed .filter-header::after {
+      transform: rotate(-90deg);
+    }
+
+    .filter-group .filter-content {
+      display: block;
+    }
+
+    .filter-group.collapsed .filter-content {
+      display: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      outline: none;
+    }
+
+    .modal input[type="text"],
+    .modal input[type="number"],
+    .modal textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .modal input[type="text"]:focus,
+    .modal input[type="number"]:focus,
+    .modal textarea:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      outline: none;
+    }
+
+    .modal textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+
+
+
+    /* Дополнительные стили для контактной карточки */
+    #contactContent .row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    #contactContent a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    #contactContent a:hover {
+      text-decoration: underline;
+    }
+
+    #contactModal .modal {
+      padding: 20px;
+      border-radius: 12px;
+      background: white;
+    }
+
+    #contactModal .modal h3 {
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    #contactModal .modal .row strong {
+      font-weight: 600;
+    }
+
+    .modal label {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .modal input[type="text"],
+    .modal input[type="email"],
+    .modal input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      background-color: #fff;
+    }
+
+    .modal input[type="text"]:focus,
+    .modal input[type="email"]:focus,
+    .modal input[type="password"]:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+      outline: none;
+    }
+
+    .site-footer {
+      background: #f9fafb;
+      padding: 40px 20px;
+      font-size: 14px;
+      color: #1f2937;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .footer-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto 30px auto;
+    }
+
+    .footer-columns h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .footer-columns ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-columns li {
+      margin-bottom: 8px;
+    }
+
+    .footer-columns a {
+      text-decoration: none;
+      color: #374151;
+      transition: color 0.2s ease;
+    }
+
+    .footer-columns a:hover {
+      color: #2563eb;
+    }
+
+    .footer-bottom {
+      max-width: 960px;
+      margin: 0 auto;
+      font-size: 12px;
+      color: #6b7280;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .footer-bottom a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .footer-bottom a:hover {
+      text-decoration: underline;
+    }
+    
+    .contact-info {
+        margin: 28px auto;
+    }
+
+  </style>
+</head>
+
+<body>
+  <!-- Модальное окно входа / регистрации -->
+  <div class="modal-backdrop" id="authModal" style="display:none">
+    <div class="modal" style="max-width:400px">
+      <h2>Вход/регистрация</h2>
+      <form id="authForm">
+        <label>Имя пользователя<input type="text" id="authName" required></label>
+        <label>Email<input type="email" id="authEmail" required></label>
+        <label>Пароль<input type="password" id="authPassword" required></label>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px">
+          <button type="button" class="btn secondary" onclick="closeAuthModal()">Отмена</button>
+          <button type="submit" class="btn">Войти / Зарегистрироваться</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="wrap">
+    <header>
+      <div class="logo">
+        <a href = 'http://127.0.0.1:8000/', style="text-decoration: none;">
+          <h1>BDBM.Russia</h1>
+        </a>
+        <p>Общероссийская торговая платформа</p>
+      </div>
+      <div class="row" style="margin-left:auto">
+        <h2 class="pill" id="authBtn">Вход / Регистрация</h2>
+      </div>
+    </header>
+    <div class="logo-l">
+        <img src="https://via.placeholder.com/120x60.png?text=Логотип" alt="Логотип компании" />
+        <h1>Завод ТехМаш</h1>
+        <p>Производство электротехнического оборудования</p>
+      </div>
+
+    <section class="contact-info" style="background: #ffffff; border-radius: 12px; padding: 20px; box-shadow: 0 6px 18px rgba(0,0,0,0.05); margin-top: 20px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #1f2937;">📞 Контактная информация</h3>
+
+        <div class="row"><strong>Адрес:</strong> г. Санкт-Петербург, ул. Промышленная, 15</div>
+        <div class="row"><strong>Телефон:</strong> <a href="tel:+78121234567">+7 (812) 123-45-67</a></div>
+        <div class="row"><strong>Email:</strong> <a href="mailto:info@tekmash.ru">info@tekmash.ru</a></div>
+        <div class="row"><strong>Время работы:</strong> Пн–Пт с 9:00 до 18:00</div>
+            <section class="certificates">
+          <h3>Сертификаты</h3>
+          <img src="https://via.placeholder.com/260x150.png?text=Сертификат+1" alt="Сертификат 1" />
+          <img src="https://via.placeholder.com/260x150.png?text=Сертификат+2" alt="Сертификат 2" />
+    </section>
+    </section>
+
+
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="filter-group">
+          <div class="filter-header">Поиск</div>
+          <div class="filter-content">
+            <input id="q" placeholder="название, характеристика, компания..." type="text" />
+          </div>
+        </div>
+        <div class="filter-group collapsed">
+          <div class="filter-header">Категория</div>
+          <div class="filter-content">
+            <div class="checkbox-list" id="categories"></div>
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="filter-header">Цена (₽)</div>
+          <div class="filter-content">
+            <div class="price-range">
+              <input id="minPrice" placeholder="min" type="number" />
+              <input id="maxPrice" placeholder="max" type="number" />
+            </div>
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="filter-header">Наличие</div>
+          <div class="filter-content">
+            <div class="checkbox-list" id="availabilityFilter">
+              <label><input type="checkbox" value="В наличии" /> В наличии</label>
+              <label><input type="checkbox" value="Под заказ" /> Под заказ</label>
+            </div>
+          </div>
+        </div>
+        <div class="filter-group collapsed">
+          <div class="filter-header">Характеристики</div>
+          <div class="filter-content">
+            <div class="checkbox-list" id="specs"></div>
+          </div>
+        </div>
+        <div class="filter-group" id="locationGroup">
+          <div class="filter-header">Местоположение</div>
+          <div class="filter-content">
+            <input id="locationSearch" placeholder="Поиск города..." type="text" />
+            <div class="checkbox-list" id="locationList" style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn" id="apply">Применить</button>
+          <button class="btn secondary" id="reset">Сброс</button>
+        </div>
+      </aside>
+      <main class="content">
+        <div class="controls">
+          <div class="row">
+            <div class="badge" id="total">0</div>
+            <div class="result-count">товаров найдено</div>
+          </div>
+          <div class="row">
+            <label class="chip">Сорт:</label>
+            <select id="sort">
+              <option value="relevance">По релевантности</option>
+              <option value="price_asc">Цена ↑</option>
+              <option value="price_desc">Цена ↓</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid" id="grid"></div>
+      </main>
+    </div>
+  </div>
+  <!-- Full-width footer wrapper -->
+      <div class="footer-wrapper">
+        <footer class="site-footer">
+          <div class="footer-columns">
+            <div>
+              <h4>Покупателям</h4>
+              <ul>
+                <li><a href="#">Регистрация покупателя</a></li>
+                <li><a href="#">Каталог товаров и услуг</a></li>
+                <li><a href="#">Каталог компаний</a></li>
+                <li><a href="#">Рейтинг компаний</a></li>
+                <li><a href="#">Добавить закупку</a></li>
+                <li><a href="#">Как совершать покупки</a></li>
+                <li><a href="#">Правила безопасных покупок</a></li>
+                <li><a href="#">Вопросы и ответы</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4>Продавцам</h4>
+              <ul>
+                <li><a href="#">Регистрация компании</a></li>
+                <li><a href="#">Тарифы</a></li>
+                <li><a href="#">Конструктор магазинов</a></li>
+                <li><a href="#">Участвовать в закупках</a></li>
+                <li><a href="#">Правила размещения</a></li>
+                <li><a href="#">Справка и ЧаВо?</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4>Информация</h4>
+              <ul>
+                <li><a href="#">О проекте</a></li>
+                <li><a href="#">Пользовательское соглашение</a></li>
+                <li><a href="#">Политика конфиденциальности</a></li>
+                <li><a href="#">Оферта на оказание услуг</a></li>
+                <li><a href="#">Отзывы о портале</a></li>
+                <li><a href="#">Обновления</a></li>
+                <li><a href="#">Служба поддержки</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4>Мы в соцсетях</h4>
+              <ul>
+                <li><a href="#">Телеграм</a></li>
+                <li><a href="#">ВКонтакте</a></li>
+                <li><a href="#">Одноклассники</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <p>
+              BDBM.Russia не является интернет-магазином. Чтобы купить товар, вы должны связаться с продавцом по
+              <a href="#">номеру телефона</a>, который указан под фото товара.
+            </p>
+            <p>
+              Если вы хотите продавать на PromPortal.su или у вас возникли вопросы по работе портала, звоните по телефону
+              <a href="tel:+79000000000">+7 (900) 00-00</a> или пишите на
+              <a href="mailto:BDBM.Russia@mailo.com">BDBM.Russia@mailo.com</a>
+            </p>
+            <p>© BDBM.Russia, 2025</p>
+            <p style="margin-top:8px;">Демо-шаблон — необходима реализация регистрации, оплаты и хранения данных на сервере для продакшна.</p>
+          </div>
+        </footer>
+      </div>
+  <!-- modal -->
+  <div class="modal-backdrop" id="modal" style="display:none">
+    <div class="modal">
+      <h3 id="modalTitle">Заказ</h3>
+      <form id="orderForm">
+        <input id="productId" type="hidden" />
+        <label>Ваше имя<input id="buyerName" required="" type="text" /></label>
+        <label>Email<input id="buyerEmail" required="" type="text" /></label>
+        <label>Количество<input id="qty" min="1" required="" type="number" value="1" /></label>
+        <label>Сообщение<textarea id="buyerMsg" rows="3"></textarea></label>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+          <button class="btn secondary" id="cancelBtn" type="button">Отмена</button>
+          <button class="btn">Отправить заказ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Контакты продавца -->
+  <div class="modal-backdrop" id="contactModal" style="display:none">
+    <div class="modal" style="max-width:500px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <h3 style="margin:0">Контакты продавца</h3>
+        <button onclick="closeContactModal()"
+          style="background:none;border:none;font-size:20px;cursor:pointer">×</button>
+      </div>
+      <div id="contactContent" style="display:flex;flex-direction:column;gap:8px">
+        <!-- Контент будет подставлен динамически -->
+      </div>
+    </div>
+  </div>
+  <script>
+    // --- Demo data ---
+    const PRODUCTS = [
+      { id: 1, title: 'Электродвигатель АТ-200',company: 'Завод ТехМаш',category: 'Электрооборудование', price: 15400,location: 'Санкт-Петербург', specs: ['220V', 'IP54', '3kW'], imgText: 'АТ-200' },
+      { id: 2, title: 'Редуктор Р-50', company: 'Завод ТехМаш',category: 'Электрооборудование', price: 98000,location: 'Санкт-Петербург', specs: ['Сталь', 'Масляный'], imgText: 'Р-50' },
+      { id: 3, title: 'Насос центробежный НЦ-1', company: 'Завод ТехМаш',category: 'Металопроизводство', price: 42000,location: 'Санкт-Петербург', location: 'Санкт-Петербург', specs: ['3kW', 'Нержавейка'], imgText: 'НЦ-1' , availability: 'В наличии'},
+      { id: 4, title: 'Контроллер PLC-300', company: 'Завод ТехМаш', category: 'Электрооборудование', price: 72000, location: 'Санкт-Петербург', specs: ['Ethernet', '24V'], imgText: 'PLC-300' , availability: 'В наличии'},
+      { id: 5, title: 'Турбинный диск ТД-7', company: 'Завод ТехМаш', category: 'Металопроизводство', price: 230000, location: 'Санкт-Петербург', specs: ['Титан', 'Ø200mm'], imgText: 'ТД-7' , availability: 'В наличии'},
+      { id: 6, title: 'Паллетный штабелер', company: 'Завод ТехМаш', category: 'Электрооборудование', price: 65000, location: 'Санкт-Петербург', specs: ['Электро', '500kg'], imgText: 'Штабелер' , availability: 'В наличии'},
+    ];
+
+    // --- Rendering / Filters ---
+    const grid = document.getElementById('grid');
+    const total = document.getElementById('total');
+    const q = document.getElementById('q');
+    const categoriesEl = document.getElementById('categories');
+    const specsEl = document.getElementById('specs');
+    const locationSelect = document.getElementById('locationSelect');
+    const minPrice = document.getElementById('minPrice');
+    const maxPrice = document.getElementById('maxPrice');
+    const apply = document.getElementById('apply');
+    const reset = document.getElementById('reset');
+    const sort = document.getElementById('sort');
+
+    // derive sets
+    const categories = Array.from(new Set(PRODUCTS.map(p => p.category)));
+
+    // Для демонстрации прокрутки!!! Стереть(закоментировать) и заменить на закоменченную константу locations ниже!!!
+    // const locations = [
+    //   "Москва", "Санкт-Петербург", "Новосибирск", "Екатеринбург", "Казань",
+    //   "Нижний Новгород", "Челябинск", "Самара", "Омск", "Ростов-на-Дону",
+    //   "Уфа", "Красноярск", "Пермь", "Воронеж", "Волгоград",
+    //   "Краснодар", "Тюмень", "Саратов", "Тольятти", "Ижевск",
+    //   "Барнаул", "Ульяновск", "Иркутск", "Хабаровск", "Ярославль",
+    //   "Владивосток", "Махачкала", "Томск", "Оренбург", "Кемерово"
+    // ];
+
+    const locations = Array.from(new Set(PRODUCTS.map(p=>p.location)));
+
+    const specs = Array.from(new Set(PRODUCTS.flatMap(p => p.specs)));
+
+    function makeCheckboxList(items, container, namePrefix) {
+      items.forEach(it => {
+        const id = namePrefix + '-' + it.replace(/\s|\W/g, '_');
+        const wrap = document.createElement('label'); wrap.style.display = 'flex'; wrap.style.alignItems = 'center'; wrap.style.gap = '8px';
+        const cb = document.createElement('input'); cb.type = 'checkbox'; cb.value = it; cb.id = id; wrap.appendChild(cb);
+        const span = document.createElement('span'); span.textContent = it; span.style.fontSize = '14px'; wrap.appendChild(span);
+        container.appendChild(wrap);
+      })
+    }
+    makeCheckboxList(categories, categoriesEl, 'cat');
+    makeCheckboxList(specs, specsEl, 'spec');
+    const locationList = document.getElementById('locationList');
+
+    function renderLocationCheckboxes(filter = '') {
+      locationList.innerHTML = '';
+      const filteredLocations = locations.filter(loc => loc.toLowerCase().includes(filter.toLowerCase()));
+      makeCheckboxList(filteredLocations, locationList, 'loc');
+    }
+
+    document.getElementById('locationSearch').addEventListener('input', e => {
+      renderLocationCheckboxes(e.target.value);
+    });
+
+    renderLocationCheckboxes(); // initial
+
+    function render(products) {
+      grid.innerHTML = '';
+      total.textContent = products.length;
+      if (products.length === 0) { grid.innerHTML = '<div style="padding:20px">Ничего не найдено по заданным фильтрам.</div>'; return }
+      products.forEach(p => {
+        const card = document.createElement('article'); card.className = 'card';
+        card.innerHTML = `
+          <div class="thumb">${p.imgText}</div>
+          <h4>${p.title}</h4>
+          <div class="meta"><div>${p.company}</div><div class="price">₽${p.price.toLocaleString()}</div></div>
+          <div class="row" style="color:${p.availability === 'В наличии' ? 'green' : '#b45309'}; font-weight: 500; font-size: 14px;">
+            ${p.availability === 'В наличии' ? "✔ В наличии" : "⏳ Под заказ"}
+          </div>
+          <div class="specs">${p.specs.map(s => `<div class="spec">${s}</div>`).join('')}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+            <div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px">
+              <div class="pill">${p.category}</div>
+              <div class="pill">${p.location}</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn secondary" data-id="${p.id}" onclick="viewProfile(${p.id})">Побробнее</button>
+              <button class="btn" onclick="openOrder(${p.id})">Заказать</button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      })
+    }
+
+    function applyFilters() {
+      const qv = q.value.trim().toLowerCase();
+      const checkedCats = Array.from(categoriesEl.querySelectorAll('input[type=checkbox]:checked')).map(n => n.value);
+      const checkedSpecs = Array.from(specsEl.querySelectorAll('input[type=checkbox]:checked')).map(n => n.value);
+      const checkedLocs = Array.from(locationList.querySelectorAll('input[type=checkbox]:checked')).map(n => n.value);
+      const min = Number(minPrice.value) || 0;
+      const checkedAvailability = Array.from(document.querySelectorAll('#availabilityFilter input:checked')).map(cb => cb.value);
+      const max = Number(maxPrice.value) || Infinity;
+
+      let out = PRODUCTS.filter(p => {
+        if (checkedCats.length && !checkedCats.includes(p.category)) return false;
+        if (checkedLocs.length && !checkedLocs.includes(p.location)) return false;
+        if (p.price < min || p.price > max) return false;
+        if (checkedAvailability.length && !checkedAvailability.includes(p.availability)) return false;
+        if (checkedSpecs.length && !checkedSpecs.every(s => p.specs.includes(s))) return false;
+        if (qv) {
+          const hay = (p.title + ' ' + p.company + ' ' + p.category + ' ' + p.specs.join(' ') + ' ' + p.location).toLowerCase();
+          if (!hay.includes(qv)) return false;
+        }
+        return true;
+      });
+
+      // sort
+      const s = sort.value;
+      if (s === 'price_asc') out.sort((a, b) => a.price - b.price);
+      if (s === 'price_desc') out.sort((a, b) => b.price - a.price);
+
+      render(out);
+    }
+
+    apply.addEventListener('click', applyFilters);
+    reset.addEventListener('click', () => { document.querySelectorAll('.sidebar input').forEach(i => { if (i.type === 'checkbox') i.checked = false; else i.value = '' }); locationSelect.value = ''; sort.value = 'relevance'; applyFilters(); });
+    sort.addEventListener('change', applyFilters);
+    q.addEventListener('keydown', (e) => { if (e.key === 'Enter') applyFilters(); });
+
+    // small profile viewer (opens a simple alert in demo)
+    window.viewProfile = function (id) {
+      const p = PRODUCTS.find(x => x.id === id);
+      if (!p) return;
+
+      const contactContent = document.getElementById('contactContent');
+      contactContent.innerHTML = `
+        <div class="row"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#2563eb" viewBox="0 0 24 24"><path d="M322V2h6v2h6v2h6v16H3zm2-2h2v-2H5v2zm4 0h2v-4H9v4zm4 0h2v-6h-2v6zm4 0h2v-8h-2v8z"/>
+          </svg><strong style="min-width:80px">Город:</strong> ${p.location}</div>
+        <div class="row"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#10b981" viewBox="0 0 24 24"><path d="M21 16V8a1 1 0 0 0-.55-.9l-8-4a1 1 0 0 0-.9 0l-8 4A1 1 0 0 0 3 8v8a1 1 0 0 0 .55.9l8 4a1 1 0 0 0 .9 0l8-4a1 1 0 0 0 .55-.9zM12 4.3 18.74 8 12 11.7 5.26 8 12 4.3zM5 9.86l6 3.33v6.01L5 15.87V9.86zm14 6.01-6 3.33v-6.01l6-3.33v6.01z"/></svg><strong style="min-width:80px">Наличие:</strong> ${p.availability}</div>
+        <div class="row"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#10b981" viewBox="0 0 24 24"><path d="M17.472 14.382a1 1 0 0 0-1.114.217l-2.11 2.112a15.043 15.043 0 0 1-6.96-6.96l2.112-2.11a1 1 0 0 0 .217-1.114L8.282 3.383a1 1 0 0 0-1.058-.631l-3.986.665a1 1 0 0 0-.838.99C2.4 15.626 8.374 21.6 19.593 21.6a1 1 0 0 0 .99-.838l.665-3.986a1 1 0 0 0-.63-1.058l-3.146-1.02z"/></svg><strong style="min-width:80px">Телефон:</strong> <a href="tel:+79000000000">+7 900 000-00-00</a></div>
+        <div class="row"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#6366f1" viewBox="0 0 24 24"><path d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v1l-10 6L2 7V6zm0 3.236V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9.236l-9.445 5.667a1 1 0 0 1-1.11 0L2 9.236z"/></svg><strong style="min-width:80px">Email:</strong> <a href="mailto:demo@example.com">demo@example.com</a></div>
+        <div class="row"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#0ea5e9" viewBox="0 0 24 24"><path d="M10.59 13.41a1 1 0 0 1 0-1.41L15.17 7H13a1 1 0 1 1 0-2h5a.999.999 0 0 1 1 1v5a1 1 0 1 1-2 0V8.83l-4.59 4.58a1 1 0 0 1-1.41 0z"/><path d="M5 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3a1 1 0 1 0-2 0v3H5V7h3a1 1 0 1 0 0-2H5z"/></svg><strong style="min-width:80px">Сайт:</strong> <a href="https://example.com" target="_blank">example.com</a></div>
+      `;
+
+      document.getElementById('contactModal').style.display = 'flex';
+    }
+
+
+
+    // --- ordering ---
+    const modal = document.getElementById('modal');
+    const orderForm = document.getElementById('orderForm');
+    const modalTitle = document.getElementById('modalTitle');
+    const productIdInput = document.getElementById('productId');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    window.openOrder = function (id) {
+      const p = PRODUCTS.find(x => x.id === id);
+      if (!p) return;
+      modalTitle.textContent = `Заказ: ${p.title} — ${p.company}`;
+      productIdInput.value = p.id;
+      modal.style.display = 'flex';
+    }
+    cancelBtn.addEventListener('click', () => modal.style.display = 'none');
+
+    orderForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = {
+        productId: productIdInput.value,
+        name: document.getElementById('buyerName').value,
+        email: document.getElementById('buyerEmail').value,
+        qty: document.getElementById('qty').value,
+        msg: document.getElementById('buyerMsg').value,
+      };
+      // demo: just show a confirmation
+      modal.style.display = 'none';
+      alert('Заказ отправлен (демо).\n' + JSON.stringify(data, null, 2));
+    })
+
+    // initial render
+    // ▼▼▼ Новое ▼▼▼
+    // Обработка клика по заголовку фильтра для сворачивания/разворачивания
+    document.querySelectorAll('.filter-group').forEach(group => {
+      const header = group.querySelector('.filter-header');
+      if (!header) return;
+      header.addEventListener('click', () => {
+        group.classList.toggle('collapsed');
+      });
+    });
+    // ▲▲▲ Новое ▲▲▲
+
+    render(PRODUCTS);
+
+    function closeContactModal() {
+      document.getElementById('contactModal').style.display = 'none';
+    }
+
+    document.getElementById('authBtn').addEventListener('click', () => {
+  document.getElementById('authModal').style.display = 'flex';
+});
+
+function closeAuthModal() {
+  document.getElementById('authModal').style.display = 'none';
+}
+
+document.getElementById('authForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const name = document.getElementById('authName').value;
+  const email = document.getElementById('authEmail').value;
+  const password = document.getElementById('authPassword').value;
+
+  alert(`Демо вход / регистрация:\nИмя: ${name}\nEmail: ${email}\nПароль: ${password}`);
+  closeAuthModal();
+});
+
+
+  </script>
+</body>
+
+</html>
