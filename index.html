@@ -542,11 +542,13 @@
   <div class="wrap">
     <header>
       <div class="logo">
-        <h1>BDBM.Russia</h1>
+        <a href = 'http://127.0.0.1:8000/', style="text-decoration: none;">
+          <h1>BDBM.Russia</h1>
+        </a>
         <p>Общероссийская торговая платформа</p>
       </div>
       <div class="row" style="margin-left:auto">
-        <div class="pill" id="authBtn">Вход / Регистрация</div>
+        <h2 class="pill" id="authBtn">Вход / Регистрация</h2>
       </div>
     </header>
     <div class="layout">
@@ -716,12 +718,18 @@
   <script>
     // --- Demo data ---
     const PRODUCTS = [
-      { id: 1, title: 'Электродвигатель АТ-200', company: 'Завод ТехМаш', category: 'Электрооборудование', price: 15400, location: 'Санкт-Петербург', specs: ['220V', 'IP54', '3kW'], imgText: 'АТ-200', availability: 'В наличии' },
+{ id: 1, title: 'Электродвигатель АТ-200', company: 'Завод ТехМаш', category: 'Электрооборудование', price: 15400, location: 'Санкт-Петербург', specs: ['220V', 'IP54', '3kW'], imgText: 'АТ-200', availability: 'В наличии' },
       { id: 2, title: 'Редуктор Р-50', company: 'МехПром', category: 'Механика', price: 98000, location: 'Москва', specs: ['Сталь', 'Масляный'], imgText: 'Р-50', availability: 'В наличии' },
       { id: 3, title: 'Насос центробежный НЦ-1', company: 'ВодаПром', category: 'Насосы', price: 42000, location: 'Казань', specs: ['3kW', 'Нержавейка'], imgText: 'НЦ-1', availability: 'В наличии' },
       { id: 4, title: 'Контроллер PLC-300', company: 'АвтоКонтрол', category: 'Автоматика', price: 72000, location: 'Москва', specs: ['Ethernet', '24V'], imgText: 'PLC-300', availability: 'Под заказ' },
       { id: 5, title: 'Турбинный диск ТД-7', company: 'МеталлСнаб', category: 'Металлоизделия', price: 230000, location: 'Саратов', specs: ['Титан', 'Ø200mm'], imgText: 'ТД-7', availability: 'Под заказ' },
       { id: 6, title: 'Паллетный штабелер', company: 'ЛогистТех', category: 'Складское', price: 65000, location: 'Санкт-Петербург', specs: ['Электро', '500kg'], imgText: 'Штабелер', availability: 'В наличии' },
+      { id: 7, title: 'Электродвигатель АТ-200',company: 'ЛогистТех',category: 'Электрооборудование', price: 15400, specs: ['220V', 'IP54', '3kW'], imgText: 'АТ-200' },
+      { id: 8, title: 'Редуктор Р-50', company: 'Завод ТехМаш',category: 'Электрооборудование', price: 98000, specs: ['Сталь', 'Масляный'], imgText: 'Р-50' },
+      { id: 9, title: 'Насос центробежный НЦ-1', company: 'Завод ТехМаш',category: 'Металопроизводство', price: 42000, location: 'Санкт-Петербург', specs: ['3kW', 'Нержавейка'], imgText: 'НЦ-1' , availability: 'В наличии'},
+      { id: 10, title: 'Контроллер PLC-300', company: 'Завод ТехМаш', category: 'Электрооборудование', price: 72000, location: 'Санкт-Петербург', specs: ['Ethernet', '24V'], imgText: 'PLC-300' , availability: 'В наличии'},
+      { id: 11, title: 'Турбинный диск ТД-7', company: 'Завод ТехМаш', category: 'Металопроизводство', price: 230000, location: 'Санкт-Петербург', specs: ['Титан', 'Ø200mm'], imgText: 'ТД-7' , availability: 'В наличии'},
+      { id: 12, title: 'Паллетный штабелер', company: 'Завод ТехМаш', category: 'Электрооборудование', price: 65000, location: 'Санкт-Петербург', specs: ['Электро', '500kg'], imgText: 'Штабелер' , availability: 'В наличии'},
     ];
 
     // --- Rendering / Filters ---
