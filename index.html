@@ -430,10 +430,115 @@
     #contactModal .modal .row strong {
       font-weight: 600;
     }
+
+    .modal label {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .modal input[type="text"],
+    .modal input[type="email"],
+    .modal input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      background-color: #fff;
+    }
+
+    .modal input[type="text"]:focus,
+    .modal input[type="email"]:focus,
+    .modal input[type="password"]:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+      outline: none;
+    }
+
+    .site-footer {
+      background: #f9fafb;
+      padding: 40px 20px;
+      font-size: 14px;
+      color: #1f2937;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .footer-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto 30px auto;
+    }
+
+    .footer-columns h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .footer-columns ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-columns li {
+      margin-bottom: 8px;
+    }
+
+    .footer-columns a {
+      text-decoration: none;
+      color: #374151;
+      transition: color 0.2s ease;
+    }
+
+    .footer-columns a:hover {
+      color: #2563eb;
+    }
+
+    .footer-bottom {
+      max-width: 960px;
+      margin: 0 auto;
+      font-size: 12px;
+      color: #6b7280;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .footer-bottom a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .footer-bottom a:hover {
+      text-decoration: underline;
+    }
+    
+
   </style>
 </head>
 
 <body>
+  <!-- Модальное окно входа / регистрации -->
+  <div class="modal-backdrop" id="authModal" style="display:none">
+    <div class="modal" style="max-width:400px">
+      <h2>Вход/регистрация</h2>
+      <form id="authForm">
+        <label>Имя пользователя<input type="text" id="authName" required></label>
+        <label>Email<input type="email" id="authEmail" required></label>
+        <label>Пароль<input type="password" id="authPassword" required></label>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px">
+          <button type="button" class="btn secondary" onclick="closeAuthModal()">Отмена</button>
+          <button type="submit" class="btn">Войти / Зарегистрироваться</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <div class="wrap">
     <header>
       <div class="logo">
@@ -441,7 +546,7 @@
         <p>Общероссийская торговая платформа</p>
       </div>
       <div class="row" style="margin-left:auto">
-        <div class="pill">Вход / Регистрация</div>
+        <div class="pill" id="authBtn">Вход / Регистрация</div>
       </div>
     </header>
     <div class="layout">
@@ -511,10 +616,73 @@
           </div>
         </div>
         <div class="grid" id="grid"></div>
-        <footer>Демо-шаблон — реализуйте регистрацию, оплату и хранение данных на сервере для продакшна.</footer>
       </main>
     </div>
   </div>
+  <!-- Full-width footer wrapper -->
+      <div class="footer-wrapper">
+        <footer class="site-footer">
+          <div class="footer-columns">
+            <div>
+              <h4>Покупателям</h4>
+              <ul>
+                <li><a href="#">Регистрация покупателя</a></li>
+                <li><a href="#">Каталог товаров и услуг</a></li>
+                <li><a href="#">Каталог компаний</a></li>
+                <li><a href="#">Рейтинг компаний</a></li>
+                <li><a href="#">Добавить закупку</a></li>
+                <li><a href="#">Как совершать покупки</a></li>
+                <li><a href="#">Правила безопасных покупок</a></li>
+                <li><a href="#">Вопросы и ответы</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4>Продавцам</h4>
+              <ul>
+                <li><a href="#">Регистрация компании</a></li>
+                <li><a href="#">Тарифы</a></li>
+                <li><a href="#">Конструктор магазинов</a></li>
+                <li><a href="#">Участвовать в закупках</a></li>
+                <li><a href="#">Правила размещения</a></li>
+                <li><a href="#">Справка и ЧаВо?</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4>Информация</h4>
+              <ul>
+                <li><a href="#">О проекте</a></li>
+                <li><a href="#">Пользовательское соглашение</a></li>
+                <li><a href="#">Политика конфиденциальности</a></li>
+                <li><a href="#">Оферта на оказание услуг</a></li>
+                <li><a href="#">Отзывы о портале</a></li>
+                <li><a href="#">Обновления</a></li>
+                <li><a href="#">Служба поддержки</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4>Мы в соцсетях</h4>
+              <ul>
+                <li><a href="#">Телеграм</a></li>
+                <li><a href="#">ВКонтакте</a></li>
+                <li><a href="#">Одноклассники</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <p>
+              BDBM.Russia не является интернет-магазином. Чтобы купить товар, вы должны связаться с продавцом по
+              <a href="#">номеру телефона</a>, который указан под фото товара.
+            </p>
+            <p>
+              Если вы хотите продавать на PromPortal.su или у вас возникли вопросы по работе портала, звоните по телефону
+              <a href="tel:+79000000000">+7 (900) 00-00</a> или пишите на
+              <a href="mailto:BDBM.Russia@mailo.com">BDBM.Russia@mailo.com</a>
+            </p>
+            <p>© BDBM.Russia, 2025</p>
+            <p style="margin-top:8px;">Демо-шаблон — необходима реализация регистрации, оплаты и хранения данных на сервере для продакшна.</p>
+          </div>
+        </footer>
+      </div>
   <!-- modal -->
   <div class="modal-backdrop" id="modal" style="display:none">
     <div class="modal">
@@ -742,6 +910,26 @@
     function closeContactModal() {
       document.getElementById('contactModal').style.display = 'none';
     }
+
+    document.getElementById('authBtn').addEventListener('click', () => {
+  document.getElementById('authModal').style.display = 'flex';
+});
+
+function closeAuthModal() {
+  document.getElementById('authModal').style.display = 'none';
+}
+
+document.getElementById('authForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const name = document.getElementById('authName').value;
+  const email = document.getElementById('authEmail').value;
+  const password = document.getElementById('authPassword').value;
+
+  alert(`Демо вход / регистрация:\nИмя: ${name}\nEmail: ${email}\nПароль: ${password}`);
+  closeAuthModal();
+});
+
 
   </script>
 </body>
