@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- Простые типы с ограничениями -->
+    <xs:simpleType name="yearType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1900"/>
+            <xs:maxInclusive value="2030"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="phoneType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="\+7 \(\d{3}\) \d{2}-\d{2}-\d{2}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="emailType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[^@]+@[^\.]+\..+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="universityTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="state"/>
+            <xs:enumeration value="private"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="accreditationType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="full"/>
+            <xs:enumeration value="partial"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="priorityType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="high"/>
+            <xs:enumeration value="medium"/>
+            <xs:enumeration value="low"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Сложные типы -->
+    <xs:complexType name="addressType">
+        <xs:sequence>
+            <xs:element name="city" type="xs:string"/>
+            <xs:element name="street" type="xs:string"/>
+            <xs:element name="house" type="xs:string"/>
+            <xs:element name="building" type="xs:string" minOccurs="0"/>
+            <xs:element name="zip_code" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="contactInfoType">
+        <xs:sequence>
+            <xs:element name="address" type="addressType"/>
+            <xs:element name="phones">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="phone" type="phoneType" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="email" type="emailType"/>
+            <xs:element name="website" type="xs:anyURI"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="departmentType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="head" type="xs:string"/>
+            <xs:element name="student_count" type="xs:integer"/>
+        </xs:sequence>
+        <xs:attribute name="code" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="facultyType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="abbreviation" type="xs:string"/>
+            <xs:element name="dean" type="xs:string"/>
+            <xs:element name="established" type="yearType"/>
+            <xs:element name="departments" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="department" type="departmentType" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="specializations" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="specialization" type="xs:string" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <xs:attribute name="code" type="xs:string" use="required"/>
+        <xs:attribute name="priority" type="priorityType" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="photoType">
+        <xs:sequence>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="file_path" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="year" type="yearType"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <xs:attribute name="category" type="xs:string" use="required"/>
+        <xs:attribute name="priority" type="xs:integer" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="achievementType">
+        <xs:sequence>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="year" type="yearType" use="required"/>
+        <xs:attribute name="category" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="universityType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="abbreviation" type="xs:string"/>
+            <xs:element name="status" type="xs:string"/>
+            <xs:element name="foundation_year" type="yearType"/>
+            <xs:element name="contact_info" type="contactInfoType"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="faculties">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="faculty" type="facultyType" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="gallery" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="photo" type="photoType" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="achievements" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="achievement" type="achievementType" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <xs:attribute name="type" type="universityTypeType" use="required"/>
+        <xs:attribute name="accreditation" type="accreditationType" use="required"/>
+    </xs:complexType>
+
+    <!-- Корневой элемент -->
+    <xs:element name="universities">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="university" type="universityType" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
