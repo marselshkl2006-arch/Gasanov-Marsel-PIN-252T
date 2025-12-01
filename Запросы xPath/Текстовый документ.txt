@@ -1,29 +1,15 @@
-1.  //university[@id='omgtu1']
-    /* Все данные об ОмГТУ */
-
-2.  //faculty[@id='fitiks']/name
-    /* Название факультета ФИТиКС */
-
-3.  //department[student_count > 200]/name
-    /* Названия кафедр с количеством студентов больше 200 */
-
-4.  //university/faculties/faculty[departments/department]
-    /* Факультеты, имеющие кафедры */
-
-5.  //photo[@category='fitiks']
-    /* Все фотографии категории ФИТиКС */
-
-6.  //university[foundation_year < 1970]/name
-    /* Названия университетов, основанных до 1970 года */
-
-7.  //specialization[contains(., 'инженерия')]
-    /* Специализации, содержащие слово "инженерия" */
-
-8.  //achievement[@year='2023']/title
-    /* Названия достижений за 2023 год */
-
-9.  //faculty[@priority='high']/departments/department/name
-    /* Названия кафедр приоритетных факультетов */
-
-10. //phone[@type='reception']
-    /* Все телефоны приемной */
+1. //university[@type='state'] - все государственные университеты
+2. //faculty[@priority='high']/name - названия приоритетных факультетов
+3. //department[student_count > 150]/name - кафедры с более чем 150 студентами
+4. //university[foundation_year > 1950]/name - университеты основанные после 1950 года
+5. //photo[contains(@category, 'campus')] - фотографии кампусов
+6. //specialization[contains(., 'инженерия') or contains(., 'строительство')] - инженерные специализации
+7. //university[@accreditation='full']/abbreviation - аббревиатуры полностью аккредитованных вузов
+8. //achievement[@year='2023']/title - достижения за 2023 год
+9. //faculty[count(departments/department) >= 2]/name - факультеты с 2+ кафедрами
+10. //phone[contains(., '65-')] - телефоны с кодом 65
+11. //university[contains(name, 'Достоевск')]/contact_info/address - адрес ОмГУ
+12. //faculty[abbreviation='ФИТиКС']/departments/department/name - кафедры ФИТиКС
+13. //university[abbreviation='СибАДИ']/achievements/achievement - достижения СибАДИ
+14. //gallery/photo[@year > 2020] - фотографии после 2020 года
+15. //department[@code starts-with '01']/name - кафедры с кодом начинающимся на 01 (ОмГТУ)
