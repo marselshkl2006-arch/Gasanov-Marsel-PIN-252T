@@ -33,7 +33,7 @@
             <faculty id="fitiks" code="01" priority="high">
                 <name>Факультет информационных технологий и компьютерных систем</name>
                 <abbreviation>ФИТиКС</abbreviation>
-                <dean>Иванов Петр Сергеевич</dean>
+                <dean>Макаров Владимир Вячеславович</dean>
                 <established>1995</established>
                 
                 <departments>
@@ -148,7 +148,7 @@
             </photo>
             <photo id="p4" category="library">
                 <title>Научная библиотека</title>
-                <file_path>images/omgu_library.jpg</file_path>
+               <file_path>images/omgu_library.jpg</file_path>
                 <description>Одна из крупнейших библиотек в Сибири</description>
                 <year>2022</year>
             </photo>
