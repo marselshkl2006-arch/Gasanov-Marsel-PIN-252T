@@ -1,159 +1,242 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE universities SYSTEM "university.dtd">
+<?xml-stylesheet type="text/xsl" href="university_transform.xsl"?>
 <universities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:noNamespaceSchemaLocation="university_schema.xsd">
     
-    <university id="1" type="state">
-        <name>Омский Государственный Технический Университет</name>
+    <!-- Омский Государственный Технический Университет -->
+    <university id="omgtu1" type="state" accreditation="full">
+        <name lang="ru">Омский Государственный Технический Университет</name>
         <abbreviation>ОмГТУ</abbreviation>
         <status>Национальный исследовательский университет</status>
         <foundation_year>1942</foundation_year>
         
-        <address>
-            <city>Омск</city>
-            <street>проспект Мира</street>
-            <house>11</house>
-            <building>А</building>
-            <zip>644050</zip>
-        </address>
-        
-        <contacts>
-            <phone>+7 (3812) 65-34-47</phone>
-            <phone>+7 (3812) 65-33-29</phone>
+        <contact_info>
+            <address>
+                <city>Омск</city>
+                <street>проспект Мира</street>
+                <house>11</house>
+                <building>А</building>
+                <zip_code>644050</zip_code>
+            </address>
+            <phones>
+                <phone type="reception">+7 (3812) 65-34-47</phone>
+                <phone type="admission">+7 (3812) 65-33-29</phone>
+            </phones>
             <email>info@omgtu.ru</email>
             <website>https://www.omgtu.ru</website>
-            <reception_hours>пн-пт 9:00-17:00</reception_hours>
-        </contacts>
+        </contact_info>
         
-        <description>
-            Омский государственный технический университет — крупнейший технический вуз 
-            Омска и один из ведущих технических университетов России. 
-            Университет готовит инженерные и научные кадры для различных отраслей экономики.
-            В составе университета 9 институтов и факультетов.
-        </description>
+        <description>Крупнейший технический вуз Омска и один из ведущих технических университетов России. Готовит инженерные и научные кадры для различных отраслей экономики.</description>
         
         <faculties>
-            <!-- Особое внимание ФИТиКС -->
-            <faculty id="fitiks" priority="high">
+            <faculty id="fitiks" code="01" priority="high">
                 <name>Факультет информационных технологий и компьютерных систем</name>
                 <abbreviation>ФИТиКС</abbreviation>
                 <dean>Иванов Петр Сергеевич</dean>
-                <foundation_year>1995</foundation_year>
-                <description>
-                    Ведущий факультет в области IT-образения в Омском регионе.
-                    Готовит специалистов в области программирования, искусственного интеллекта,
-                    кибербезопасности и компьютерных систем.
-                </description>
+                <established>1995</established>
+                
                 <departments>
-                    <department>
+                    <department code="0101">
                         <name>Вычислительная техника и программирование</name>
                         <head>Сидоров Алексей Владимирович</head>
+                        <student_count>250</student_count>
                     </department>
-                    <department>
+                    <department code="0102">
                         <name>Информационные системы и технологии</name>
                         <head>Петрова Мария Ивановна</head>
-                    </department>
-                    <department>
-                        <name>Компьютерная безопасность</name>
-                        <head>Кузнецов Дмитрий Анатольевич</head>
+                        <student_count>180</student_count>
                     </department>
                 </departments>
+                
                 <specializations>
                     <specialization>Программная инженерия</specialization>
                     <specialization>Информационная безопасность</specialization>
                     <specialization>Искусственный интеллект</specialization>
-                    <specialization>Веб-технологии</specialization>
                 </specializations>
             </faculty>
             
-            <faculty id="energy">
+            <faculty id="energy" code="02">
                 <name>Энергетический институт</name>
                 <abbreviation>ЭНИН</abbreviation>
                 <dean>Смирнов Андрей Викторович</dean>
-            </faculty>
-            
-            <faculty id="petrochem">
-                <name>Нефтехимический институт</name>
-                <abbreviation>НХИ</abbreviation>
-                <dean>Ковалева Елена Дмитриевна</dean>
-            </faculty>
-            
-            <faculty id="radio">
-                <name>Радиотехнический факультет</name>
-                <abbreviation>РТФ</abbreviation>
-                <dean>Николаев Сергей Петрович</dean>
+                <established>1960</established>
             </faculty>
         </faculties>
         
-        <photos>
-            <!-- Фото ФИТиКС -->
-            <photo category="fitiks" priority="1">
+        <gallery>
+            <photo id="p1" category="fitiks" priority="1">
                 <title>Здание ФИТиКС</title>
-                <url>images/fitiks_building.jpg</url>
+                <file_path>images/omgtu_fitiks.jpg</file_path>
                 <description>Современное здание факультета информационных технологий</description>
                 <year>2020</year>
             </photo>
-            
-            <photo category="fitiks" priority="2">
-                <title>Компьютерные классы ФИТиКС</title>
-                <url>images/fitiks_computer_class.jpg</url>
-                <description>Современные компьютерные классы с мощным оборудованием</description>
-                <year>2023</year>
-            </photo>
-            
-            <photo category="fitiks" priority="3">
-                <title>Студенты ФИТиКС на хакатоне</title>
-                <url>images/fitiks_hackathon.jpg</url>
-                <description>Студенты факультета участвуют в программистском марафоне</description>
-                <year>2024</year>
-            </photo>
-            
-            <photo category="fitiks" priority="4">
-                <title>Лаборатория кибербезопасности</title>
-                <url>images/fitiks_cyberlab.jpg</url>
-                <description>Специализированная лаборатория для изучения защиты информации</description>
-                <year>2022</year>
-            </photo>
-            
-            <!-- Общие фото университета -->
-            <photo category="campus" priority="1">
+            <photo id="p2" category="campus">
                 <title>Главный корпус ОмГТУ</title>
-                <url>images/omgtu_main_building.jpg</url>
+                <file_path>images/omgtu_main.jpg</file_path>
                 <description>Основное здание университета на проспекте Мира</description>
                 <year>2018</year>
             </photo>
+        </gallery>
+    </university>
+    
+    <!-- Омский Государственный Университет им. Ф.М. Достоевского -->
+    <university id="omgu2" type="state" accreditation="full">
+        <name lang="ru">Омский Государственный Университет им. Ф.М. Достоевского</name>
+        <abbreviation>ОмГУ</abbreviation>
+        <status>Классический университет</status>
+        <foundation_year>1974</foundation_year>
+        
+        <contact_info>
+            <address>
+                <city>Омск</city>
+                <street>проспект Мира</street>
+                <house>55а</house>
+                <zip_code>644077</zip_code>
+            </address>
+            <phones>
+                <phone type="reception">+7 (3812) 22-98-00</phone>
+                <phone type="admission">+7 (3812) 22-97-77</phone>
+            </phones>
+            <email>rector@omsu.ru</email>
+            <website>https://omsu.ru</website>
+        </contact_info>
+        
+        <description>Крупнейший классический университет Омска, ведущий подготовку по гуманитарным, естественным и техническим наукам. Носит имя великого русского писателя Ф.М. Достоевского.</description>
+        
+        <faculties>
+            <faculty id="philology" code="10">
+                <name>Филологический факультет</name>
+                <abbreviation>ФилФак</abbreviation>
+                <dean>Козлова Анна Михайловна</dean>
+                <established>1974</established>
+                
+                <departments>
+                    <department code="1001">
+                        <name>Русский язык и литература</name>
+                        <head>Николаева Елена Викторовна</head>
+                        <student_count>150</student_count>
+                    </department>
+                    <department code="1002">
+                        <name>Иностранные языки</name>
+                        <head>Волкова Ольга Сергеевна</head>
+                        <student_count>120</student_count>
+                    </department>
+                </departments>
+                
+                <specializations>
+                    <specialization>Русская филология</specialization>
+                    <specialization>Зарубежная филология</specialization>
+                    <specialization>Лингвистика</specialization>
+                </specializations>
+            </faculty>
             
-            <photo category="campus" priority="2">
-                <title>Библиотека ОмГТУ</title>
-                <url>images/omgtu_library.jpg</url>
-                <description>Научно-техническая библиотека университета</description>
+            <faculty id="mathematics" code="11">
+                <name>Математический факультет</name>
+                <abbreviation>МатФак</abbreviation>
+                <dean>Петров Дмитрий Иванович</dean>
+                <established>1975</established>
+            </faculty>
+        </faculties>
+        
+        <gallery>
+            <photo id="p3" category="campus">
+                <title>Главный корпус ОмГУ</title>
+                <file_path>images/omgu_main.jpg</file_path>
+                <description>Историческое здание университета</description>
                 <year>2021</year>
             </photo>
-            
-            <photo category="events" priority="1">
-                <title>День первокурсника</title>
-                <url>images/omgtu_freshmen_day.jpg</url>
-                <description>Торжественное посвящение в студенты</description>
-                <year>2023</year>
-            </photo>
-            
-            <photo category="laboratories" priority="1">
-                <title>Научно-исследовательская лаборатория</title>
-                <url>images/omgtu_research_lab.jpg</url>
-                <description>Современное исследовательское оборудование</description>
+            <photo id="p4" category="library">
+                <title>Научная библиотека</title>
+                <file_path>images/omgu_library.jpg</file_path>
+                <description>Одна из крупнейших библиотек в Сибири</description>
                 <year>2022</year>
             </photo>
-        </photos>
+        </gallery>
+    </university>
+    
+    <!-- Сибирский государственный автомобильно-дорожный университет -->
+    <university id="sibadi3" type="state" accreditation="full">
+        <name lang="ru">Сибирский государственный автомобильно-дорожный университет</name>
+        <abbreviation>СибАДИ</abbreviation>
+        <status>Автомобильно-дорожный университет</status>
+        <foundation_year>1930</foundation_year>
+        
+        <contact_info>
+            <address>
+                <city>Омск</city>
+                <street>проспект Мира</street>
+                <house>5</house>
+                <zip_code>644080</zip_code>
+            </address>
+            <phones>
+                <phone type="reception">+7 (3812) 65-03-50</phone>
+                <phone type="admission">+7 (3812) 65-03-60</phone>
+            </phones>
+            <email>info@sibadi.org</email>
+            <website>https://www.sibadi.org</website>
+        </contact_info>
+        
+        <description>Ведущий автомобильно-дорожный вуз Сибири, специализирующийся на подготовке инженеров для дорожного строительства, автомобильного транспорта и логистики.</description>
+        
+        <faculties>
+            <faculty id="road" code="20" priority="high">
+                <name>Дорожный факультет</name>
+                <abbreviation>ДорФак</abbreviation>
+                <dean>Кузнецов Владимир Алексеевич</dean>
+                <established>1930</established>
+                
+                <departments>
+                    <department code="2001">
+                        <name>Строительство автомобильных дорог</name>
+                        <head>Соколов Александр Петрович</head>
+                        <student_count>200</student_count>
+                    </department>
+                    <department code="2002">
+                        <name>Мосты и транспортные сооружения</name>
+                        <head>Морозова Татьяна Ивановна</head>
+                        <student_count>180</student_count>
+                    </department>
+                </departments>
+                
+                <specializations>
+                    <specialization>Строительство дорог</specialization>
+                    <specialization>Дорожные машины</specialization>
+                    <specialization>Транспортное планирование</specialization>
+                </specializations>
+            </faculty>
+            
+            <faculty id="auto" code="21">
+                <name>Автомобильный факультет</name>
+                <abbreviation>АвтФак</abbreviation>
+                <dean>Иванова Светлана Дмитриевна</dean>
+                <established>1935</established>
+            </faculty>
+        </faculties>
+        
+        <gallery>
+            <photo id="p5" category="campus">
+                <title>Главный корпус СибАДИ</title>
+                <file_path>images/sibadi_main.jpg</file_path>
+                <description>Архитектурный комплекс университета</description>
+                <year>2019</year>
+            </photo>
+            <photo id="p6" category="laboratory">
+                <title>Лаборатория дорожных покрытий</title>
+                <file_path>images/sibadi_lab.jpg</file_path>
+                <description>Современное исследовательское оборудование</description>
+                <year>2023</year>
+            </photo>
+        </gallery>
         
         <achievements>
-            <achievement>
-                <title>Лучший технический вуз Сибири</title>
-                <year>2023</year>
-                <category>рейтинг</category>
+            <achievement year="2022" category="research">
+                <title>Лучший дорожный вуз России</title>
+                <description>Первое место в рейтинге автомобильно-дорожных вузов страны</description>
             </achievement>
-            <achievement>
-                <title>Победа в конкурсе IT-проектов</title>
-                <year>2024</year>
-                <category>студенческие достижения</category>
+            <achievement year="2023" category="innovation">
+                <title>Инновации в дорожном строительстве</title>
+                <description>Разработка новых технологий дорожного покрытия</description>
             </achievement>
         </achievements>
     </university>
