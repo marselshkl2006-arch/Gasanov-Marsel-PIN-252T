@@ -7,20 +7,35 @@
 <head>
     <title>Высшие учебные заведения Омска</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .university { border: 2px solid #333; margin: 20px 0; padding: 20px; border-radius: 10px; }
-        .fitiks { background-color: #e8f4f8; border-color: #007acc; }
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .university { border: 2px solid #333; margin: 20px 0; padding: 20px; border-radius: 10px; background: white; }
+        .omgtu { background-color: #e8f4f8; border-color: #007acc; }
+        .omgu { background-color: #f0e8f8; border-color: #8a2be2; }
+        .sibadi { background-color: #f8f0e8; border-color: #d2691e; }
         .faculty { margin: 15px 0; padding: 15px; background: #f9f9f9; border-left: 4px solid #007acc; }
         .department { margin: 10px 0; padding: 10px; background: #fff; border: 1px solid #ddd; }
         .photo-gallery { display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0; }
-        .photo-item { border: 1px solid #ccc; padding: 10px; width: 200px; }
+        .photo-item { border: 1px solid #ccc; padding: 10px; width: 200px; background: white; }
         .achievement { background: #e7f7e7; padding: 10px; margin: 5px 0; border-radius: 5px; }
-        h1, h2, h3 { color: #333; }
-        .highlight { background-color: #ffffcc; padding: 2px; }
+        h1 { color: #333; text-align: center; }
+        h2 { color: #333; border-bottom: 2px solid #333; padding-bottom: 5px; }
+        .university-header { display: flex; justify-content: space-between; align-items: center; }
+        .university-badge { padding: 5px 10px; border-radius: 15px; color: white; font-weight: bold; }
+        .omgtu-badge { background: #007acc; }
+        .omgu-badge { background: #8a2be2; }
+        .sibadi-badge { background: #d2691e; }
+        .priority-badge { background: #ff6600; color: white; padding: 3px 8px; border-radius: 10px; font-size: 12px; margin-left: 10px; }
     </style>
 </head>
 <body>
     <h1>Высшие учебные заведения города Омска</h1>
+    
+    <div style="margin: 20px 0; padding: 15px; background: white; border-radius: 10px; border: 1px solid #ddd;">
+        <h3 style="margin-top: 0;">Статистика:</h3>
+        <p>Всего университетов: <strong><xsl:value-of select="count(//university)"/></strong></p>
+        <p>Всего факультетов: <strong><xsl:value-of select="count(//faculty)"/></strong></p>
+        <p>Всего кафедр: <strong><xsl:value-of select="count(//department)"/></strong></p>
+    </div>
     
     <xsl:apply-templates select="universities/university"/>
     
@@ -30,24 +45,50 @@
 
 <xsl:template match="university">
     <div class="university">
-        <xsl:if test="@id='omgtu1'">
-            <xsl:attribute name="class">university fitiks</xsl:attribute>
-        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="@id='omgtu1'">
+                <xsl:attribute name="class">university omgtu</xsl:attribute>
+            </xsl:when>
+            <xsl:when test="@id='omgu2'">
+                <xsl:attribute name="class">university omgu</xsl:attribute>
+            </xsl:when>
+            <xsl:when test="@id='sibadi3'">
+                <xsl:attribute name="class">university sibadi</xsl:attribute>
+            </xsl:when>
+        </xsl:choose>
         
-        <h2>
-            <xsl:value-of select="name"/>
-            <xsl:if test="abbreviation">
-                <xsl:text> (</xsl:text>
-                <xsl:value-of select="abbreviation"/>
-                <xsl:text>)</xsl:text>
-            </xsl:if>
-        </h2>
+        <div class="university-header">
+            <h2>
+                <xsl:value-of select="name"/>
+                <xsl:if test="abbreviation">
+                    <xsl:text> (</xsl:text>
+                    <xsl:value-of select="abbreviation"/>
+                    <xsl:text>)</xsl:text>
+                </xsl:if>
+            </h2>
+            <span class="university-badge">
+                <xsl:choose>
+                    <xsl:when test="@id='omgtu1'">
+                        <xsl:attribute name="class">university-badge omgtu-badge</xsl:attribute>
+                        Технический
+                    </xsl:when>
+                    <xsl:when test="@id='omgu2'">
+                        <xsl:attribute name="class">university-badge omgu-badge</xsl:attribute>
+                        Классический
+                    </xsl:when>
+                    <xsl:when test="@id='sibadi3'">
+                        <xsl:attribute name="class">university-badge sibadi-badge</xsl:attribute>
+                        Автодорожный
+                    </xsl:when>
+                </xsl:choose>
+            </span>
+        </div>
         
         <p><strong>Статус:</strong> <xsl:value-of select="status"/></p>
         <p><strong>Год основания:</strong> <xsl:value-of select="foundation_year"/></p>
         <p><strong>Тип:</strong> <xsl:value-of select="@type"/></p>
+        <p><strong>Аккредитация:</strong> <xsl:value-of select="@accreditation"/></p>
         
-        <!-- Контактная информация -->
         <div class="contact-info">
             <h3>Контактная информация:</h3>
             <p>
@@ -71,7 +112,7 @@
             </ul>
             <p><strong>Email:</strong> <xsl:value-of select="contact_info/email"/></p>
             <p><strong>Сайт:</strong> 
-                <a href="{contact_info/website}">
+                <a href="{contact_info/website}" target="_blank">
                     <xsl:value-of select="contact_info/website"/>
                 </a>
             </p>
@@ -79,13 +120,11 @@
         
         <p><strong>Описание:</strong> <xsl:value-of select="description"/></p>
         
-        <!-- Факультеты -->
         <div class="faculties">
-            <h3>Факультеты:</h3>
+            <h3>Факультеты (<xsl:value-of select="count(faculties/faculty)"/>):</h3>
             <xsl:apply-templates select="faculties/faculty"/>
         </div>
         
-        <!-- Фотогалерея -->
         <xsl:if test="gallery">
             <div class="gallery">
                 <h3>Фотогалерея:</h3>
@@ -95,7 +134,6 @@
             </div>
         </xsl:if>
         
-        <!-- Достижения -->
         <xsl:if test="achievements">
             <div class="achievements">
                 <h3>Достижения:</h3>
@@ -119,22 +157,20 @@
                 <xsl:text>)</xsl:text>
             </xsl:if>
             <xsl:if test="@priority='high'">
-                <span style="color: #ff6600; margin-left: 10px;">★ ПРИОРИТЕТНЫЙ</span>
+                <span class="priority-badge">★ ПРИОРИТЕТНЫЙ</span>
             </xsl:if>
         </h4>
         
         <p><strong>Декан:</strong> <xsl:value-of select="dean"/></p>
-        <p><strong>Год основания:</strong> <xsl:value-of select="established"/></p>
+        <p><strong>Год основания факультета:</strong> <xsl:value-of select="established"/></p>
         
-        <!-- Кафедры -->
         <xsl:if test="departments">
             <div class="departments">
-                <h5>Кафедры:</h5>
+                <h5>Кафедры (<xsl:value-of select="count(departments/department)"/>):</h5>
                 <xsl:apply-templates select="departments/department"/>
             </div>
         </xsl:if>
         
-        <!-- Специализации -->
         <xsl:if test="specializations">
             <div class="specializations">
                 <h5>Специализации:</h5>
@@ -166,6 +202,9 @@
         <h5><xsl:value-of select="title"/></h5>
         <xsl:if test="@category='fitiks'">
             <div style="color: #007acc; font-weight: bold;">ФИТиКС</div>
+        </xsl:if>
+        <xsl:if test="@category='campus'">
+            <div style="color: #228b22; font-weight: bold;">Кампус</div>
         </xsl:if>
         <img src="{file_path}" alt="{title}" width="180" height="120" style="border: 1px solid #ccc;"/>
         <p><xsl:value-of select="description"/></p>
